@@ -38,7 +38,7 @@ class WaitingView(View):
         # Chip-ID in Session speichern
         request.session['chip_id'] = chip_id
         
-        # Mitarbeiter über HRworks API suchen
+        # Mitarbeiter Ã¼ber HRworks API suchen
         api_client = HRworksAPIClient()
         employee_data = api_client.find_employee_by_chip_id(chip_id)
         
@@ -63,7 +63,7 @@ class BookingView(View):
     
     def get(self, request):
         """Zeigt die Buchungsseite mit Buttons an"""
-        # Prüfen ob Mitarbeiter authentifiziert ist
+        # PrÃ¼fen ob Mitarbeiter authentifiziert ist
         employee_name = request.session.get('employee_name')
         
         if not employee_name:
@@ -93,10 +93,10 @@ class BookingView(View):
         booking_type = request.POST.get('booking_type')
         
         if booking_type not in ['come', 'go', 'business_trip']:
-            messages.error(request, "Ungültiger Buchungstyp.")
+            messages.error(request, "Ungueltiger Buchungstyp.")
             return redirect('booking')
         
-        # Buchung durchführen
+        # Buchung durchfÃ¼hren
         api_client = HRworksAPIClient()
         success = api_client.create_time_booking(personnel_number, booking_type)
         
@@ -111,7 +111,7 @@ class BookingView(View):
             error_message=None if success else "API-Fehler"
         )
         
-        # Ergebnis speichern für Success-Seite
+        # Ergebnis speichern fÃ¼r Success-Seite
         request.session['last_booking_type'] = booking_type
         request.session['last_booking_success'] = success
         
@@ -120,7 +120,7 @@ class BookingView(View):
 
 class SuccessView(View):
     """
-    Erfolgsseite - zeigt Bestätigung und leitet zurück zur Warteseite
+    Erfolgsseite - zeigt BestÃ¤tigung und leitet zurÃ¼ck zur Warteseite
     """
     template_name = 'time_tracking/success.html'
     
@@ -130,7 +130,7 @@ class SuccessView(View):
         booking_type = request.session.get('last_booking_type')
         success = request.session.get('last_booking_success', False)
         
-        # Buchungstyp für Anzeige übersetzen
+        # Buchungstyp fÃ¼r Anzeige Ã¼bersetzen
         booking_type_display = {
             'come': 'Kommen',
             'go': 'Gehen',
@@ -151,13 +151,13 @@ class SuccessView(View):
 
 class ManualScanView(View):
     """
-    Manuelle Scan-Ansicht für Entwicklung/Testing
-    Ermöglicht manuelles Triggern eines Chip-Scans
+    Manuelle Scan-Ansicht fÃ¼r Entwicklung/Testing
+    ErmÃ¶glicht manuelles Triggern eines Chip-Scans
     """
     template_name = 'time_tracking/manual_scan.html'
     
     def get(self, request):
-        """Zeigt Formular für manuellen Scan"""
+        """Zeigt Formular fÃ¼r manuellen Scan"""
         return render(request, self.template_name)
     
     def post(self, request):
@@ -179,7 +179,7 @@ class ManualScanView(View):
             messages.error(request, f"Kein Mitarbeiter mit Chip-ID {chip_id} gefunden.")
             return redirect('manual_scan')
         
-        # Session füllen
+        # Session fÃ¼llen
         request.session['personnel_number'] = api_client.get_personnel_number(employee_data)
         request.session['employee_name'] = api_client.get_employee_name(employee_data)
         
