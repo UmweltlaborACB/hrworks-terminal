@@ -1,0 +1,651 @@
+/* ===================================
+   GLOBALE EINSTELLUNGEN
+   =================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Farben */
+    --primary-color: #2563eb;
+    --success-color: #10b981;
+    --danger-color: #ef4444;
+    --warning-color: #f59e0b;
+    --neutral-color: #6b7280;
+    
+    --bg-primary: #ffffff;
+    --bg-secondary: #f3f4f6;
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+    
+    /* Schatten */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+    
+    /* Abst‰nde */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 3rem;
+    
+    /* Border Radius */
+    --radius-sm: 0.375rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+    
+    /* Transitions */
+    --transition-fast: 150ms ease;
+    --transition-base: 250ms ease;
+    --transition-slow: 350ms ease;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-md);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    
+    /* Touch-optimiert */
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.container {
+    width: 100%;
+    max-width: 600px;
+    min-height: 80vh;
+}
+
+/* ===================================
+   NACHRICHTEN / ALERTS
+   =================================== */
+
+.messages {
+    position: fixed;
+    top: var(--spacing-lg);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 500px;
+    z-index: 1000;
+}
+
+.message {
+    padding: var(--spacing-md);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--spacing-sm);
+    box-shadow: var(--shadow-lg);
+    animation: slideDown 0.3s ease;
+    font-weight: 500;
+}
+
+.message-success {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.message-error {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.message-warning {
+    background-color: var(--warning-color);
+    color: white;
+}
+
+.message-info {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===================================
+   WARTEBILDSCHIRM
+   =================================== */
+
+.waiting-screen {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.waiting-container {
+    background: var(--bg-primary);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    padding: var(--spacing-xl);
+    text-align: center;
+    animation: fadeIn 0.5s ease;
+}
+
+.logo-container {
+    margin-bottom: var(--spacing-xl);
+}
+
+.rfid-icon {
+    display: inline-block;
+    color: var(--primary-color);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+}
+
+.waiting-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.waiting-subtitle {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xl);
+}
+
+.pulse-ring {
+    width: 150px;
+    height: 150px;
+    border: 4px solid var(--primary-color);
+    border-radius: 50%;
+    margin: var(--spacing-xl) auto;
+    animation: pulseRing 2s infinite;
+    opacity: 0.6;
+}
+
+@keyframes pulseRing {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.8;
+    }
+    50% {
+        transform: scale(1);
+        opacity: 0.4;
+    }
+    100% {
+        transform: scale(0.8);
+        opacity: 0.8;
+    }
+}
+
+.dev-tools {
+    margin-top: var(--spacing-xl);
+    padding-top: var(--spacing-lg);
+    border-top: 2px dashed var(--neutral-color);
+}
+
+.dev-button {
+    display: inline-block;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    background-color: var(--neutral-color);
+    color: white;
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    transition: all var(--transition-base);
+}
+
+.dev-button:hover {
+    background-color: #4b5563;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* ===================================
+   BUCHUNGSBILDSCHIRM
+   =================================== */
+
+.booking-screen {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.booking-container {
+    background: var(--bg-primary);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    padding: var(--spacing-xl);
+    animation: fadeIn 0.5s ease;
+}
+
+.employee-header {
+    text-align: center;
+    padding-bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+    border-bottom: 2px solid var(--bg-secondary);
+}
+
+.employee-icon {
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--primary-color), #3b82f6);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--spacing-md);
+    color: white;
+}
+
+.employee-name {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.booking-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.booking-buttons form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.booking-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-md);
+    width: 100%;
+    padding: var(--spacing-xl);
+    border: none;
+    border-radius: var(--radius-lg);
+    font-size: 1.5rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-md);
+    color: white;
+    
+    /* Touch-optimiert */
+    min-height: 100px;
+    touch-action: manipulation;
+}
+
+.booking-btn:active {
+    transform: scale(0.98);
+    box-shadow: var(--shadow-sm);
+}
+
+.booking-btn-come {
+    background: linear-gradient(135deg, var(--success-color), #059669);
+}
+
+.booking-btn-come:hover {
+    background: linear-gradient(135deg, #059669, #047857);
+}
+
+.booking-btn-go {
+    background: linear-gradient(135deg, var(--danger-color), #dc2626);
+}
+
+.booking-btn-go:hover {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+}
+
+.booking-btn-business {
+    background: linear-gradient(135deg, var(--warning-color), #d97706);
+}
+
+.booking-btn-business:hover {
+    background: linear-gradient(135deg, #d97706, #b45309);
+}
+
+.btn-icon {
+    display: flex;
+    align-items: center;
+}
+
+.btn-text {
+    flex: 1;
+}
+
+.cancel-link {
+    text-align: center;
+    margin-top: var(--spacing-xl);
+}
+
+.cancel-btn {
+    display: inline-block;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-base);
+}
+
+.cancel-btn:hover {
+    color: var(--text-primary);
+    background-color: var(--bg-secondary);
+}
+
+/* ===================================
+   ERFOLGSBILDSCHIRM
+   =================================== */
+
+.success-screen {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.error-screen {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+.success-container {
+    background: var(--bg-primary);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    padding: var(--spacing-xl);
+    text-align: center;
+    animation: fadeIn 0.5s ease;
+}
+
+.success-icon {
+    display: inline-block;
+    color: var(--success-color);
+    animation: successBounce 0.6s ease;
+}
+
+.error-icon {
+    display: inline-block;
+    color: var(--danger-color);
+    animation: errorShake 0.5s ease;
+}
+
+@keyframes successBounce {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes errorShake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-10px);
+    }
+    75% {
+        transform: translateX(10px);
+    }
+}
+
+.success-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--success-color);
+    margin: var(--spacing-lg) 0 var(--spacing-sm);
+}
+
+.error-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--danger-color);
+    margin: var(--spacing-lg) 0 var(--spacing-sm);
+}
+
+.success-subtitle,
+.error-subtitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.booking-type-display {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xl);
+}
+
+.error-message {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xl);
+}
+
+.redirect-info {
+    margin-top: var(--spacing-xl);
+    padding-top: var(--spacing-lg);
+    border-top: 2px solid var(--bg-secondary);
+}
+
+.redirect-info p {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+/* ===================================
+   MANUELLER SCAN (Entwicklung)
+   =================================== */
+
+.manual-scan-screen {
+    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+}
+
+.manual-scan-container {
+    background: var(--bg-primary);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    padding: var(--spacing-xl);
+    animation: fadeIn 0.5s ease;
+}
+
+.manual-scan-container h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-md);
+    text-align: center;
+}
+
+.dev-warning {
+    text-align: center;
+    color: var(--warning-color);
+    font-weight: 600;
+    font-size: 1.125rem;
+    margin-bottom: var(--spacing-xl);
+    padding: var(--spacing-sm);
+    background-color: #fef3c7;
+    border-radius: var(--radius-md);
+}
+
+.form-group {
+    margin-bottom: var(--spacing-lg);
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+    font-size: 1.125rem;
+}
+
+.form-group input[type="text"] {
+    width: 100%;
+    padding: var(--spacing-md);
+    font-size: 1.25rem;
+    border: 2px solid #e5e7eb;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-base);
+}
+
+.form-group input[type="text"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.submit-btn {
+    width: 100%;
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: linear-gradient(135deg, var(--primary-color), #3b82f6);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 1.25rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-md);
+}
+
+.submit-btn:hover {
+    background: linear-gradient(135deg, #1d4ed8, var(--primary-color));
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.submit-btn:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
+}
+
+.back-link {
+    margin-top: var(--spacing-xl);
+    text-align: center;
+}
+
+.back-link a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color var(--transition-base);
+}
+
+.back-link a:hover {
+    color: var(--text-primary);
+}
+
+/* ===================================
+   ANIMATIONS
+   =================================== */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===================================
+   RESPONSIVE ANPASSUNGEN
+   =================================== */
+
+/* Sehr kleine Displays */
+@media (max-height: 600px) {
+    .waiting-title {
+        font-size: 2rem;
+    }
+    
+    .waiting-subtitle {
+        font-size: 1rem;
+    }
+    
+    .rfid-icon svg {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .pulse-ring {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+/* Sehr groﬂe Displays */
+@media (min-height: 1000px) {
+    .container {
+        max-width: 800px;
+    }
+    
+    .waiting-title {
+        font-size: 3rem;
+    }
+    
+    .booking-btn {
+        min-height: 120px;
+        font-size: 1.75rem;
+    }
+}
+
+/* Landscape-Modus Warnung */
+@media (orientation: landscape) and (max-height: 600px) {
+    body::before {
+        content: '? Bitte drehen Sie das Ger‰t ins Hochformat';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background-color: var(--warning-color);
+        color: white;
+        padding: var(--spacing-sm);
+        text-align: center;
+        font-weight: 600;
+        z-index: 9999;
+    }
+}
+
+/* Print-Styles (falls mal gebraucht) */
+@media print {
+    body {
+        background: white;
+    }
+    
+    .messages,
+    .dev-tools,
+    .cancel-link {
+        display: none;
+    }
+}
