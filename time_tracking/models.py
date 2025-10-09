@@ -3,10 +3,10 @@ from django.utils import timezone
 
 
 class ChipMapping(models.Model):
-    """
-    Lokale Zuordnung von Chip-IDs zu HRworks-Personalnummern
-    für schnelleres Caching (optional)
-    """
+    
+    #Lokale Zuordnung von Chip-IDs zu HRworks-Personalnummern
+    #fÃ¼r schnelleres Caching (optional)
+    
     chip_id = models.CharField(max_length=100, unique=True, verbose_name="Chip-ID")
     personnel_number = models.CharField(max_length=50, verbose_name="Personalnummer")
     employee_name = models.CharField(max_length=200, verbose_name="Mitarbeitername")
@@ -22,9 +22,9 @@ class ChipMapping(models.Model):
 
 
 class BookingLog(models.Model):
-    """
-    Lokales Log aller Stempelungen für Debugging/Monitoring
-    """
+    
+    #Lokales Log aller Stempelungen fÃ¼r Debugging/Monitoring
+    
     BOOKING_TYPES = [
         ('come', 'Kommen'),
         ('go', 'Gehen'),
