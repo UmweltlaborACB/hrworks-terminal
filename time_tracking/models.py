@@ -6,6 +6,7 @@ class ChipMapping(models.Model):
     
     #Lokale Zuordnung von Chip-IDs zu HRworks-Personalnummern
     #für schnelleres Caching (optional)
+    #
     
     chip_id = models.CharField(max_length=100, unique=True, verbose_name="Chip-ID")
     personnel_number = models.CharField(max_length=50, verbose_name="Personalnummer")
