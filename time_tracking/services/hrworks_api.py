@@ -7,9 +7,9 @@ logger = logging.getLogger(__name__)
 
 
 class HRworksAPIClient:
-    """
-    Client für die HRworks API v2
-    """
+    
+    # Client fÃ¼r die HRworks API v2
+    
     
     def __init__(self):
         self.api_url = settings.HRWORKS_API_URL
@@ -17,25 +17,25 @@ class HRworksAPIClient:
         self.chip_id_field = settings.HRWORKS_CHIP_ID_FIELD
         
         if not self.api_url or not self.access_token:
-            raise ValueError("HRworks API URL und Access Token müssen in .env konfiguriert sein")
+            raise ValueError("HRworks API URL und Access Token mÃ¼ssen in .env konfiguriert sein")
     
     def _get_headers(self) -> Dict[str, str]:
-        """Erstellt die Header für API-Requests"""
+        #Erstellt die Header fÃ¼r API-Requests
         return {
             'Authorization': f'Bearer {self.access_token}',
             'Content-Type': 'application/json',
         }
     
     def find_employee_by_chip_id(self, chip_id: str) -> Optional[Dict[str, Any]]:
-        """
-        Sucht einen Mitarbeiter anhand der Chip-ID
         
-        Args:
-            chip_id: Die RFID-Chip-ID
+        #Sucht einen Mitarbeiter anhand der Chip-ID
+        
+        #Args:
+        #    chip_id: Die RFID-Chip-ID
             
-        Returns:
-            Dictionary mit Mitarbeiterdaten oder None wenn nicht gefunden
-        """
+        #Returns:
+        #    Dictionary mit Mitarbeiterdaten oder None wenn nicht gefunden
+        
         try:
             # HRworks API v2 - Persons Endpoint
             url = f"{self.api_url}/persons"
@@ -55,7 +55,7 @@ class HRworksAPIClient:
             response.raise_for_status()
             data = response.json()
             
-            # Prüfen ob Mitarbeiter gefunden wurde
+            # PrÃ¼fen ob Mitarbeiter gefunden wurde
             if data and len(data) > 0:
                 employee = data[0]
                 logger.info(f"Mitarbeiter gefunden: {employee.get('firstName')} {employee.get('lastName')}")
@@ -72,16 +72,16 @@ class HRworksAPIClient:
             return None
     
     def create_time_booking(self, personnel_number: str, booking_type: str) -> bool:
-        """
-        Erstellt eine Zeitbuchung in HRworks
         
-        Args:
-            personnel_number: Die Personalnummer des Mitarbeiters
-            booking_type: Art der Buchung ('come', 'go', 'business_trip')
-            
-        Returns:
-            True bei Erfolg, False bei Fehler
-        """
+        #Erstellt eine Zeitbuchung in HRworks
+        #
+        #Args:
+        #    personnel_number: Die Personalnummer des Mitarbeiters
+        #    booking_type: Art der Buchung ('come', 'go', 'business_trip')
+        #    
+        #Returns:
+        #    True bei Erfolg, False bei Fehler
+        
         try:
             # Mapping der Buchungstypen zu HRworks-Typen
             type_mapping = {
@@ -92,7 +92,7 @@ class HRworksAPIClient:
             
             hrworks_type = type_mapping.get(booking_type)
             if not hrworks_type:
-                logger.error(f"Ungültiger Buchungstyp: {booking_type}")
+                logger.error(f"UngÃ¼ltiger Buchungstyp: {booking_type}")
                 return False
             
             # HRworks API v2 - Time Tracking Endpoint
@@ -112,7 +112,7 @@ class HRworksAPIClient:
             )
             
             response.raise_for_status()
-            logger.info(f"Buchung erfolgreich für Personalnummer {personnel_number}: {booking_type}")
+            logger.info(f"Buchung erfolgreich fÃ¼r Personalnummer {personnel_number}: {booking_type}")
             return True
             
         except requests.exceptions.RequestException as e:
@@ -125,27 +125,27 @@ class HRworksAPIClient:
             return False
     
     def get_employee_name(self, employee_data: Dict[str, Any]) -> str:
-        """
-        Extrahiert den vollständigen Namen aus den Mitarbeiterdaten
         
-        Args:
-            employee_data: Mitarbeiterdaten von der API
-            
-        Returns:
-            Vollständiger Name
-        """
+        #Extrahiert den vollstÃ¤ndigen Namen aus den Mitarbeiterdaten
+        #
+        #Args:
+        #    employee_data: Mitarbeiterdaten von der API
+        #    
+        #Returns:
+        #    VollstÃ¤ndiger Name
+        
         first_name = employee_data.get('firstName', '')
         last_name = employee_data.get('lastName', '')
         return f"{first_name} {last_name}".strip()
     
     def get_personnel_number(self, employee_data: Dict[str, Any]) -> str:
-        """
-        Extrahiert die Personalnummer aus den Mitarbeiterdaten
         
-        Args:
-            employee_data: Mitarbeiterdaten von der API
-            
-        Returns:
-            Personalnummer
-        """
+        #Extrahiert die Personalnummer aus den Mitarbeiterdaten
+        #
+        #Args:
+        #    employee_data: Mitarbeiterdaten von der API
+        #    
+        #Returns:
+        #    Personalnummer
+    
         return employee_data.get('personnelNumber', '')
