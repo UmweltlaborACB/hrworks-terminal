@@ -130,3 +130,12 @@ def get_reader() -> RFIDReader:
         return DevelopmentRFIDReader()
     else:
         raise ValueError(f"Unbekannter Reader-Typ: {reader_type}")
+
+
+def get_rfid_reader() -> RFIDReader:
+    """
+    Factory-Funktion für RFID-Reader
+    Gibt den USB-Keyboard-Reader zurück
+    """
+    return USBKeyboardRFIDReader()
+

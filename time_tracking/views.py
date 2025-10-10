@@ -12,50 +12,61 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-@require_POST
-def process_chip(request):
-    #"""
-    #AJAX-Endpoint zum Verarbeiten der gescannten Chip-ID
-    #"""
-    try:
-        data = json.loads(request.body)
-        chip_id = data.get('chip_id', '').strip()
-        
-        if not chip_id:
+import json
+import logging
+from django.http import JsonResponse
+from django.views import View
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+
+logger = logging.getLogger(__name__)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class ProcessChipView(View):
+    def post(self, request):
+        try:
+            import json
+            data = json.loads(request.body)
+            chip_id = data.get('chip_id')
+            
+            if not chip_id:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'Keine Chip-ID empfangen'
+                })
+            
+            logger.info(f"Chip gescannt: {chip_id}")
+            
+            # API-Client erstellen
+            api_client = HRworksAPIClient()  # ← HIER IST DIE ÄNDERUNG
+            
+            # Rest bleibt gleich...
+            employee = api_client.find_employee_by_chip_id(chip_id)
+            
+            if not employee:
+                logger.warning(f"Kein Mitarbeiter für Chip {chip_id} gefunden")
+                return JsonResponse({
+                    'success': False,
+                    'error': 'Chip nicht zugeordnet'
+                })
+            
+            # Speichere in Session für nächste View
+            request.session['chip_id'] = chip_id
+            request.session['employee'] = employee
+            
+            return JsonResponse({
+                'success': True,
+                'redirect_url': '/booking/'
+            })
+            
+        except Exception as e:
+            logger.error(f"Fehler bei process_chip: {str(e)}")
             return JsonResponse({
                 'success': False,
-                'message': 'Keine Chip-ID empfangen'
+                'error': str(e)
             })
-        
-        logger.info(f"Chip-ID über AJAX empfangen: {chip_id}")
-        
-        # Chip-ID in Session speichern
-        request.session['chip_id'] = chip_id
-        
-        # Mitarbeiter über HRworks API suchen
-        api_client = HRworksAPIClient()
-        employee_data = api_client.find_employee_by_chip_id(chip_id)
-        
-        if not employee_data:
-            return JsonResponse({
-                'success': False,
-                'message': f'Kein Mitarbeiter mit Chip-ID {chip_id} gefunden'
-            })
-        
-        # Mitarbeiterdaten in Session speichern
-        request.session['employee_data'] = employee_data
-        
-        return JsonResponse({
-            'success': True,
-            'redirect_url': '/time-tracking/'
-        })
-        
-    except Exception as e:
-        logger.error(f"Fehler bei process_chip: {e}")
-        return JsonResponse({
-            'success': False,
-            'message': f'Serverfehler: {str(e)}'
-        })
+
+
 
 class WaitingView(View):
     #"""
