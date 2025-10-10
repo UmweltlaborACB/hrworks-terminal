@@ -1,41 +1,110 @@
-{% extends "time_tracking/base.html" %}
+{% extends 'base.html' %}
 
-{% block title %}Zeiterfassung - Bitte Chip scannen{% endblock %}
-
-{% block body_class %}waiting-screen{% endblock %}
+{% block title %}Chip scannen{% endblock %}
 
 {% block content %}
 <div class="waiting-container">
-    <div class="logo-container">
-        <div class="rfid-icon">
-            <svg width="120" height="120" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" fill="currentColor"/>
-                <circle cx="12" cy="12" r="3" fill="currentColor"/>
-                <path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0 8c-1.65 0-3-1.35-3-3s1.35-3 3-3 3 1.35 3 3-1.35 3-3 3z" fill="currentColor" opacity="0.3"/>
-            </svg>
-        </div>
+    <div class="scan-prompt">
+        <div class="scan-icon">ðŸ“±</div>
+        <h1>Bitte Chip scannen</h1>
+        <p>Halten Sie Ihren Chip an den RFID-Leser</p>
+        
+        <!-- Verstecktes Eingabefeld fÃ¼r USB-Reader -->
+        <input type="text" id="chip-input" autofocus autocomplete="off" 
+               style="position: absolute; left: -9999px;">
+        
+        <div class="loading-spinner"></div>
     </div>
-    
-    <h1 class="waiting-title">Willkommen</h1>
-    <p class="waiting-subtitle">Bitte halten Sie Ihren Chip an das Lesegerät</p>
-    
-    <div class="pulse-ring"></div>
-    
-    <!-- Entwicklungs-Button für manuellen Scan -->
-    {% if debug %}
-    <div class="dev-tools">
-        <a href="{% url 'manual_scan' %}" class="dev-button">Manueller Scan (Dev)</a>
-    </div>
-    {% endif %}
 </div>
 
-{% endblock %}
-
-{% block extra_js %}
 <script>
-    // Auto-Refresh alle 30 Sekunden um Session fresh zu halten
-    setTimeout(function() {
-        location.reload();
-    }, 30000);
+document.addEventListener('DOMContentLoaded', function() {
+    const chipInput = document.getElementById('chip-input');
+    
+    // Fokus immer auf Eingabefeld halten
+    function keepFocus() {
+        chipInput.focus();
+    }
+    
+    // Fokus alle 100ms wiederherstellen (falls User woanders klickt)
+    setInterval(keepFocus, 100);
+    keepFocus();
+    
+    // Bei Enter: Chip-ID an Server senden
+    chipInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            const chipId = chipInput.value.trim();
+            
+            if (chipId) {
+                console.log('Chip-ID gescannt:', chipId);
+                
+                // Chip-ID an Server senden
+                fetch('{% url "process_chip" %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({
+                        chip_id: chipId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = data.redirect_url;
+                    } else {
+                        alert(data.message || 'Fehler beim Verarbeiten der Chip-ID');
+                        chipInput.value = '';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Verbindungsfehler. Bitte erneut versuchen.');
+                    chipInput.value = '';
+                });
+            }
+        }
+    });
+});
 </script>
+
+<style>
+.waiting-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+}
+
+.scan-prompt {
+    text-align: center;
+}
+
+.scan-icon {
+    font-size: 120px;
+    margin-bottom: 20px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+.loading-spinner {
+    margin: 30px auto;
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
 {% endblock %}

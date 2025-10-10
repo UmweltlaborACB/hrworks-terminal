@@ -75,5 +75,8 @@ HRWORKS_API_URL = os.getenv('HRWORKS_API_URL')
 HRWORKS_ACCESS_TOKEN = os.getenv('HRWORKS_ACCESS_TOKEN')
 HRWORKS_CHIP_ID_FIELD = os.getenv('HRWORKS_CHIP_ID_FIELD', 'chip_id')
 
-# RFID Configuration
+# RFID Reader Konfiguration
 RFID_ANTENNA_GAIN = int(os.getenv('RFID_ANTENNA_GAIN', '4'))
+RFID_READER_TYPE = 'usb_keyboard'  # Für USB-Reader (neuftech)
+# RFID_READER_TYPE = 'development'  # Für Tests ohne Hardware
+

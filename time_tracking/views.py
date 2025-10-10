@@ -5,26 +5,73 @@ from django.utils import timezone
 from .services.hrworks_api import HRworksAPIClient
 from .services.rfid_reader import get_rfid_reader
 from .models import ChipMapping, BookingLog
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+import json
 import logging
 
 logger = logging.getLogger(__name__)
 
+@require_POST
+def process_chip(request):
+    #"""
+    #AJAX-Endpoint zum Verarbeiten der gescannten Chip-ID
+    #"""
+    try:
+        data = json.loads(request.body)
+        chip_id = data.get('chip_id', '').strip()
+        
+        if not chip_id:
+            return JsonResponse({
+                'success': False,
+                'message': 'Keine Chip-ID empfangen'
+            })
+        
+        logger.info(f"Chip-ID über AJAX empfangen: {chip_id}")
+        
+        # Chip-ID in Session speichern
+        request.session['chip_id'] = chip_id
+        
+        # Mitarbeiter über HRworks API suchen
+        api_client = HRworksAPIClient()
+        employee_data = api_client.find_employee_by_chip_id(chip_id)
+        
+        if not employee_data:
+            return JsonResponse({
+                'success': False,
+                'message': f'Kein Mitarbeiter mit Chip-ID {chip_id} gefunden'
+            })
+        
+        # Mitarbeiterdaten in Session speichern
+        request.session['employee_data'] = employee_data
+        
+        return JsonResponse({
+            'success': True,
+            'redirect_url': '/time-tracking/'
+        })
+        
+    except Exception as e:
+        logger.error(f"Fehler bei process_chip: {e}")
+        return JsonResponse({
+            'success': False,
+            'message': f'Serverfehler: {str(e)}'
+        })
 
 class WaitingView(View):
-    """
-    Startseite - wartet auf Chip-Scan
-    """
+    #"""
+    #Startseite - wartet auf Chip-Scan
+    #"""
     template_name = 'time_tracking/waiting.html'
     
     def get(self, request):
-        """Zeigt die Warteseite an"""
+        #"""Zeigt die Warteseite an"""
         return render(request, self.template_name)
     
     def post(self, request):
-        """
-        Wird aufgerufen wenn ein Chip gescannt wurde
-        (z.B. durch JavaScript Polling oder manuellen Scan-Button)
-        """
+        #"""
+        #Wird aufgerufen wenn ein Chip gescannt wurde
+        #(z.B. durch JavaScript Polling oder manuellen Scan-Button)
+        #"""
         # RFID-Reader initialisieren
         reader = get_rfid_reader()
         
@@ -56,9 +103,9 @@ class WaitingView(View):
 
 
 class BookingView(View):
-    """
-    Buchungsseite - zeigt Kommen/Gehen/Dienstgang Buttons
-    """
+    #"""
+    #Buchungsseite - zeigt Kommen/Gehen/Dienstgang Buttons
+    #"""
     template_name = 'time_tracking/booking.html'
     
     def get(self, request):
@@ -77,9 +124,9 @@ class BookingView(View):
         return render(request, self.template_name, context)
     
     def post(self, request):
-        """
-        Verarbeitet die Zeitbuchung
-        """
+        #"""
+        #Verarbeitet die Zeitbuchung
+        #"""
         # Session-Daten holen
         chip_id = request.session.get('chip_id')
         personnel_number = request.session.get('personnel_number')
@@ -119,9 +166,9 @@ class BookingView(View):
 
 
 class SuccessView(View):
-    """
-    Erfolgsseite - zeigt Bestätigung und leitet zurück zur Warteseite
-    """
+    #"""
+    #Erfolgsseite - zeigt Bestätigung und leitet zurück zur Warteseite
+    #"""
     template_name = 'time_tracking/success.html'
     
     def get(self, request):
@@ -150,10 +197,10 @@ class SuccessView(View):
 
 
 class ManualScanView(View):
-    """
-    Manuelle Scan-Ansicht für Entwicklung/Testing
-    Ermöglicht manuelles Triggern eines Chip-Scans
-    """
+    #"""
+    #Manuelle Scan-Ansicht für Entwicklung/Testing
+    #Ermöglicht manuelles Triggern eines Chip-Scans
+    #"""
     template_name = 'time_tracking/manual_scan.html'
     
     def get(self, request):
