@@ -17,5 +17,5 @@ Das aktuelle Projekt läuft zu Testzwecken noch mit einem USB Reader
 
 - Raspberry Pi (3B+ oder höher empfohlen)
 - MFRC522 RFID-Reader 
-- Touchscreen-Display (Hochformat)
+- Touchscreen-Display
 - RFID-Chips für Mitarbeiter
