@@ -1,6 +1,6 @@
 # HRworks Zeiterfassungsterminal
 
-Django-basiertes Zeiterfassungsterminal für Raspberry Pi mit RFID-Reader und HRworks API-Integration.
+Django-basiertes Zeiterfassungsterminal fÃ¼r Raspberry Pi mit RFID-Reader und HRworks API-Integration.
 
 ## Features
 
@@ -13,16 +13,7 @@ Django-basiertes Zeiterfassungsterminal für Raspberry Pi mit RFID-Reader und HRw
 
 ## Hardware-Anforderungen
 
-- Raspberry Pi (3B+ oder höher empfohlen)
+- Raspberry Pi (3B+ oder hÃ¶her empfohlen)
 - MFRC522 RFID-Reader
 - Touchscreen-Display (Hochformat)
-- RFID-Chips für Mitarbeiter
-
-## Installation
-
-### 1. Repository klonen
-
-```bash
-cd ~
-git clone <your-repo-url> hrworks-terminal
-cd hrworks-terminal
+- RFID-Chips fÃ¼r Mitarbeiter
