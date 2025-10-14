@@ -7,7 +7,7 @@
 {% block content %}
 <div class="manual-scan-container">
     <h1>Manueller Chip-Scan</h1>
-    <p class="dev-warning">?? Nur für Entwicklung/Testing</p>
+    <p class="dev-warning">?? Nur fuer Entwicklung/Testing</p>
     
     <form method="post" action="{% url 'manual_scan' %}">
         {% csrf_token %}
@@ -28,7 +28,7 @@
     </form>
     
     <div class="back-link">
-        <a href="{% url 'waiting' %}">? Zurück zur Startseite</a>
+        <a href="{% url 'waiting' %}">? Zurueck zur Startseite</a>
     </div>
 </div>
 {% endblock %}
