@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib import messages
-from .services.hrworks_service import HRworksService
+from .services.hrworks_api import HRworksAPIClient  # ← RICHTIG!
 import logging
 
 logger = logging.getLogger(__name__)
@@ -48,8 +48,8 @@ class BookingView(View):
         
         try:
             # HRworks API aufrufen
-            hrworks = HRworksService()
-            result = hrworks.book_time(chip_id, booking_type)
+            hrworks_client = HRworksAPIClient()  # ← RICHTIG!
+            result = hrworks_client.book_time(chip_id, booking_type)  # ← RICHTIG!
             
             if result:
                 messages.success(request, f'✅ {booking_type} erfolgreich gebucht!')
