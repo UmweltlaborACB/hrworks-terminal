@@ -1,32 +1,42 @@
 {% extends 'time_tracking/base.html' %}
 
-{% block title %}Bitte Chip auflegen{% endblock %}
-
-{% block body_class %}scan-screen{% endblock %}
-
 {% block content %}
 <div class="container">
-    <h1>Zeiterfassung</h1>
+    <h1>🔐 Zeiterfassung</h1>
     <p class="instruction">Bitte Chip auflegen</p>
     <div class="loading-spinner"></div>
+    <p style="opacity: 0.7; margin-top: 20px;">Warten auf RFID-Chip...</p>
 </div>
-{% endblock %}
 
-{% block extra_js %}
 <script>
-// Automatisch Chip-Status abfragen
-setInterval(function() {
-    fetch('/process-chip/', {
-        method: 'POST'
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            window.location.href = data.redirect;
-        } else if (data.error && data.error !== 'Kein Chip erkannt') {
-            alert(data.error);
-        }
-    });
-}, 1000); // Alle 1 Sekunde prüfen
+let chipIdBuffer = '';
+let lastKeyTime = Date.now();
+
+document.addEventListener('keypress', function(e) {
+    const currentTime = Date.now();
+    
+    // Wenn länger als 100ms zwischen Tasten: Buffer zurücksetzen
+    if (currentTime - lastKeyTime > 100) {
+        chipIdBuffer = '';
+    }
+    lastKeyTime = currentTime;
+    
+    // Enter = Chip-ID komplett
+    if (e.key === 'Enter' && chipIdBuffer.length > 0) {
+        const chipId = chipIdBuffer.trim();
+        console.log('RFID erkannt:', chipId);
+        
+        // Zu Booking weiterleiten
+        window.location.href = `/booking/?chip_id=${encodeURIComponent(chipId)}`;
+        
+        chipIdBuffer = '';
+    } else if (e.key !== 'Enter') {
+        // Zeichen zum Buffer hinzufügen
+        chipIdBuffer += e.key;
+    }
+});
+
+// Fokus sicherstellen (damit Tastatureingaben ankommen)
+window.focus();
 </script>
 {% endblock %}
