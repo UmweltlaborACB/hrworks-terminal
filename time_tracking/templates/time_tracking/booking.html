@@ -1,59 +1,55 @@
 {% extends 'time_tracking/base.html' %}
 
-{% block title %}Buchung wählen{% endblock %}
-
-{% block body_class %}booking-screen{% endblock %}
-
 {% block content %}
 <div class="container">
-    <h1>Hallo {{ employee_name }}!</h1>
-    <p class="instruction">Was möchten Sie buchen?</p>
+    <h1>👤 Mitarbeiter erkannt</h1>
+    <p class="instruction">Chip-ID: <strong>{{ chip_id }}</strong></p>
     
-    <div class="button-grid">
-        <button class="booking-btn" data-type="kommen">Kommen</button>
-        <button class="booking-btn" data-type="gehen">Gehen</button>
-        <button class="booking-btn" data-type="dienstgang_start">Dienstgang Start</button>
-        <button class="booking-btn" data-type="dienstgang_ende">Dienstgang Ende</button>
-        <button class="booking-btn" data-type="pause_start">Pause Start</button>
-        <button class="booking-btn" data-type="pause_ende">Pause Ende</button>
-    </div>
+    <!-- Erfolgsmeldungen anzeigen -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" style="
+                padding: 15px;
+                margin: 20px 0;
+                border-radius: 8px;
+                background: {% if message.tags == 'success' %}#10b981{% else %}#ef4444{% endif %};
+                color: white;
+            ">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
     
-    <p class="cancel"><a href="{% url 'time_tracking:scan' %}">Abbrechen</a></p>
+    <form method="post" action="{% url 'booking' %}">
+        {% csrf_token %}
+        
+        <div class="button-grid">
+            <button type="submit" name="booking_type" value="Kommen" class="booking-btn">
+                ✅ Kommen
+            </button>
+            <button type="submit" name="booking_type" value="Gehen" class="booking-btn">
+                👋 Gehen
+            </button>
+            <button type="submit" name="booking_type" value="Pause Start" class="booking-btn">
+                ⏸️ Pause Start
+            </button>
+            <button type="submit" name="booking_type" value="Pause Ende" class="booking-btn">
+                ▶️ Pause Ende
+            </button>
+        </div>
+        
+        <div class="cancel">
+            <a href="{% url 'scan' %}">← Abbrechen</a>
+        </div>
+    </form>
 </div>
-{% endblock %}
 
-{% block extra_js %}
 <script>
-// Timeout: Nach 15 Sekunden zurück zur Scan-Seite
-let timeout = setTimeout(function() {
-    window.location.href = "{% url 'time_tracking:scan' %}";
-}, 15000);
-
-// Button-Klicks
-document.querySelectorAll('.booking-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-        clearTimeout(timeout);
-        
-        const bookingType = this.dataset.type;
-        const formData = new FormData();
-        formData.append('booking_type', bookingType);
-        
-        fetch('/booking/', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('✓ Buchung erfolgreich!');
-                setTimeout(() => {
-                    window.location.href = "{% url 'time_tracking:scan' %}";
-                }, 2000);
-            } else {
-                alert('✗ Fehler: ' + data.error);
-            }
-        });
-    });
-});
+// Auto-Redirect nach Erfolg
+{% if messages %}
+    setTimeout(function() {
+        window.location.href = "{% url 'scan' %}";
+    }, 3000); // Nach 3 Sekunden zurück
+{% endif %}
 </script>
 {% endblock %}
