@@ -16,7 +16,7 @@ class HRworksAPIClient:
         self.token_expiry = None
 
     def _authenticate(self) -> bool:
-        """Holt JWT-Token von HRworks"""
+        #"""Holt JWT-Token von HRworks"""
         try:
             response = requests.post(
                 f"{self.BASE_URL}/authentication",
@@ -45,22 +45,22 @@ class HRworksAPIClient:
             return False
 
     def _get_token(self) -> Optional[str]:
-        """Gibt gültigen Token zurück, authentifiziert neu falls nötig"""
+        #"""Gibt gültigen Token zurück, authentifiziert neu falls nötig"""
         if not self.token or not self.token_expiry or datetime.now() >= self.token_expiry:
             if not self._authenticate():
                 return None
         return self.token
 
     def get_personnel_number_by_chip(self, chip_id: str) -> Optional[str]:
-        """
-        Findet die Personalnummer anhand der Chip-ID
-        
-        Args:
-            chip_id: RFID-Chip-ID
-            
-        Returns:
-            Personalnummer oder None
-        """
+        #"""
+        #Findet die Personalnummer anhand der Chip-ID
+        #
+        #Args:
+        #    chip_id: RFID-Chip-ID
+        #    
+        #Returns:
+        #    Personalnummer oder None
+        #"""
         token = self._get_token()
         if not token:
             logger.error("Konnte keinen gültigen Token erhalten")
@@ -103,16 +103,16 @@ class HRworksAPIClient:
             return None
 
     def create_working_time(self, personnel_number: str, working_time_type: str) -> bool:
-        """
-        Erstellt eine Zeitbuchung in HRworks
-
-        Args:
-            personnel_number: Personalnummer des Mitarbeiters
-            working_time_type: Typ der Zeitbuchung (work, businessTrip)
-
-        Returns:
-            True bei Erfolg, False bei Fehler
-        """
+        #"""
+        #Erstellt eine Zeitbuchung in HRworks
+        #
+        #Args:
+        #    personnel_number: Personalnummer des Mitarbeiters
+        #    working_time_type: Typ der Zeitbuchung (work, businessTrip)
+        #
+        #Returns:
+        #    True bei Erfolg, False bei Fehler
+        #"""
         token = self._get_token()
         if not token:
             logger.error("Konnte keinen gültigen Token erhalten")
@@ -151,16 +151,16 @@ class HRworksAPIClient:
             return False
 
     def book_time(self, chip_id: str, booking_type: str) -> bool:
-        """
-        Vereinfachte Methode: Von Chip-ID zur Zeitbuchung
-        
-        Args:
-            chip_id: RFID-Chip-ID
-            booking_type: "Kommen", "Gehen", "Dienstgang"
-            
-        Returns:
-            True bei Erfolg, False bei Fehler
-        """
+        #"""
+        #Vereinfachte Methode: Von Chip-ID zur Zeitbuchung
+       # 
+        #Args:
+        #    chip_id: RFID-Chip-ID
+        #    booking_type: "Kommen", "Gehen", "Dienstgang"
+        #    
+        #Returns:
+        #    True bei Erfolg, False bei Fehler
+        #"""
         # Chip-ID → Personalnummer
         personnel_number = self.get_personnel_number_by_chip(chip_id)
         if not personnel_number:
