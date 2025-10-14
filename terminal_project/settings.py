@@ -72,7 +72,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # HRworks API Configuration
 HRWORKS_API_URL = os.getenv('HRWORKS_API_URL')
-HRWORKS_ACCESS_TOKEN = os.getenv('HRWORKS_ACCESS_TOKEN')
+HRWORKS_ACCESS_KEY= os.getenv('HRWORKS-ACCESS-KEY')
+HRWORKS_SECRET_KEY= os.getenv('HRWORKS-SECRET-KEY')
 HRWORKS_CHIP_ID_FIELD = os.getenv('HRWORKS_CHIP_ID_FIELD', 'chip_id')
 
 # RFID Reader Konfiguration

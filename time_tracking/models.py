@@ -48,3 +48,19 @@ class BookingLog(models.Model):
     def __str__(self):
         status = "?" if self.success else "?"
         return f"{status} {self.employee_name} - {self.get_booking_type_display()} ({self.timestamp})"
+    
+class Employee(models.Model):
+    """Lokale Zuordnung: Chip-ID → HRworks Personalnummer"""
+    chip_id = models.CharField(max_length=50, unique=True, db_index=True)
+    personnel_number = models.CharField(max_length=20)
+    name = models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        db_table = 'employees'
+        verbose_name = 'Mitarbeiter'
+        verbose_name_plural = 'Mitarbeiter'
+    
+    def __str__(self):
+        return f"{self.name} ({self.personnel_number})"

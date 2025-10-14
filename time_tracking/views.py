@@ -4,22 +4,19 @@ from django.contrib import messages
 from django.utils import timezone
 from .services.hrworks_api import HRworksAPIClient
 from .services.rfid_reader import get_rfid_reader
-from .models import ChipMapping, BookingLog
+from .models import ChipMapping, BookingLog, Employee
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 import json
 import logging
 
-logger = logging.getLogger(__name__)
 
-import json
-import logging
 from django.http import JsonResponse
-from django.views import View
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
 logger = logging.getLogger(__name__)
+
 
 @method_decorator(csrf_exempt, name='dispatch')
 class ProcessChipView(View):
@@ -37,27 +34,28 @@ class ProcessChipView(View):
             
             logger.info(f"Chip gescannt: {chip_id}")
             
-            # API-Client erstellen
-            api_client = HRworksAPIClient()  # ← HIER IST DIE ÄNDERUNG
-            
-            # Rest bleibt gleich...
-            employee = api_client.find_employee_by_chip_id(chip_id)
-            
-            if not employee:
+            # Suche in lokaler Datenbank
+            try:
+                employee = Employee.objects.get(chip_id=chip_id)
+                
+                # Speichere in Session
+                request.session['chip_id'] = chip_id
+                request.session['employee'] = {
+                    'personnel_number': employee.personnel_number,
+                    'name': employee.name
+                }
+                
+                return JsonResponse({
+                    'success': True,
+                    'redirect_url': '/booking/'
+                })
+                
+            except Employee.DoesNotExist:
                 logger.warning(f"Kein Mitarbeiter für Chip {chip_id} gefunden")
                 return JsonResponse({
                     'success': False,
                     'error': 'Chip nicht zugeordnet'
                 })
-            
-            # Speichere in Session für nächste View
-            request.session['chip_id'] = chip_id
-            request.session['employee'] = employee
-            
-            return JsonResponse({
-                'success': True,
-                'redirect_url': '/booking/'
-            })
             
         except Exception as e:
             logger.error(f"Fehler bei process_chip: {str(e)}")
@@ -65,6 +63,7 @@ class ProcessChipView(View):
                 'success': False,
                 'error': str(e)
             })
+
 
 
 
@@ -114,66 +113,59 @@ class WaitingView(View):
 
 
 class BookingView(View):
-    #"""
-    #Buchungsseite - zeigt Kommen/Gehen/Dienstgang Buttons
-    #"""
-    template_name = 'time_tracking/booking.html'
-    
-    def get(self, request):
-        """Zeigt die Buchungsseite mit Buttons an"""
-        # Prüfen ob Mitarbeiter authentifiziert ist
-        employee_name = request.session.get('employee_name')
-        
-        if not employee_name:
-            messages.warning(request, "Bitte zuerst Chip scannen.")
-            return redirect('waiting')
-        
-        context = {
-            'employee_name': employee_name,
-        }
-        
-        return render(request, self.template_name, context)
-    
     def post(self, request):
-        #"""
-        #Verarbeitet die Zeitbuchung
-        #"""
-        # Session-Daten holen
-        chip_id = request.session.get('chip_id')
-        personnel_number = request.session.get('personnel_number')
-        employee_name = request.session.get('employee_name')
-        
-        if not all([chip_id, personnel_number, employee_name]):
-            messages.error(request, "Session abgelaufen. Bitte erneut scannen.")
-            return redirect('waiting')
-        
-        # Buchungstyp aus POST-Daten
-        booking_type = request.POST.get('booking_type')
-        
-        if booking_type not in ['come', 'go', 'business_trip']:
-            messages.error(request, "Ungueltiger Buchungstyp.")
-            return redirect('booking')
-        
-        # Buchung durchführen
-        api_client = HRworksAPIClient()
-        success = api_client.create_time_booking(personnel_number, booking_type)
-        
-        # Buchung loggen
-        BookingLog.objects.create(
-            chip_id=chip_id,
-            personnel_number=personnel_number,
-            employee_name=employee_name,
-            booking_type=booking_type,
-            timestamp=timezone.now(),
-            success=success,
-            error_message=None if success else "API-Fehler"
-        )
-        
-        # Ergebnis speichern für Success-Seite
-        request.session['last_booking_type'] = booking_type
-        request.session['last_booking_success'] = success
-        
-        return redirect('success')
+        try:
+            booking_type = request.POST.get('booking_type')
+            employee = request.session.get('employee')
+            
+            if not employee:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'Keine Sitzungsdaten'
+                })
+            
+            # Mapping zu HRworks workingTimeType
+            type_mapping = {
+                'coming': 'start',
+                'going': 'end',
+                'business_trip': 'business_trip'
+            }
+            
+            hrworks_type = type_mapping.get(booking_type)
+            if not hrworks_type:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'Ungültiger Buchungstyp'
+                })
+            
+            # API-Call
+            api_client = HRworksAPIClient()
+            success = api_client.create_working_time(
+                employee['personnel_number'],
+                hrworks_type
+            )
+            
+            if success:
+                # Session löschen
+                request.session.flush()
+                
+                return JsonResponse({
+                    'success': True,
+                    'message': 'Zeitbuchung erfolgreich'
+                })
+            else:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'Zeitbuchung fehlgeschlagen'
+                })
+                
+        except Exception as e:
+            logger.error(f"Fehler bei Zeitbuchung: {str(e)}")
+            return JsonResponse({
+                'success': False,
+                'error': str(e)
+            })
+
 
 
 class SuccessView(View):

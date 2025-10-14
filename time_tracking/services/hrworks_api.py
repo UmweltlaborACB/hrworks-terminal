@@ -1,151 +1,120 @@
 import requests
-from django.conf import settings
-from typing import Optional, Dict, Any
 import logging
+from typing import Dict, Any, Optional
+from django.conf import settings
+from datetime import datetime, timedelta
 
 logger = logging.getLogger(__name__)
 
-
 class HRworksAPIClient:
-    
-    # Client für die HRworks API v2
-    
+    BASE_URL = "https://api.hrworks.de/v2"
     
     def __init__(self):
-        self.api_url = settings.HRWORKS_API_URL
-        self.access_token = settings.HRWORKS_ACCESS_TOKEN
-        self.chip_id_field = settings.HRWORKS_CHIP_ID_FIELD
+        self.access_key = settings.HRWORKS_ACCESS_KEY
+        self.secret_key = settings.HRWORKS_SECRET_KEY
+        self.token = None
+        self.token_expiry = None
         
-        if not self.api_url or not self.access_token:
-            raise ValueError("HRworks API URL und Access Token müssen in .env konfiguriert sein")
+    def _authenticate(self) -> bool:
+        """Holt JWT-Token von HRworks gemäß API-Spezifikation"""
+        try:
+            response = requests.post(
+                f"{self.BASE_URL}/authentication",
+                json={
+                    "accessKey": self.access_key,
+                    "secretAccessKey": self.secret_key
+                },
+                headers={
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                }
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                self.token = data.get('token')
+                # Token ist 15 Minuten gültig, wir erneuern nach 14 Min
+                self.token_expiry = datetime.now() + timedelta(minutes=14)
+                logger.info("JWT-Token erfolgreich abgerufen")
+                return True
+            else:
+                logger.error(f"Authentifizierung fehlgeschlagen: {response.status_code} - {response.text}")
+                return False
+                
+        except Exception as e:
+            logger.error(f"Fehler bei Authentifizierung: {str(e)}")
+            return False
+    
+    def _ensure_token(self) -> bool:
+        """Stellt sicher, dass ein gültiger Token vorhanden ist"""
+        if not self.token or not self.token_expiry or datetime.now() >= self.token_expiry:
+            return self._authenticate()
+        return True
     
     def _get_headers(self) -> Dict[str, str]:
-        #Erstellt die Header für API-Requests
+        """Gibt Header mit JWT-Token zurück"""
         return {
-            'Authorization': f'Bearer {self.access_token}',
-            'Content-Type': 'application/json',
+            "Authorization": f"Bearer {self.token}",
+            "Accept": "application/json",
+            "Content-Type": "application/json"
         }
     
-    def find_employee_by_chip_id(self, chip_id: str) -> Optional[Dict[str, Any]]:
+    def create_working_time(self, personnel_number: str, working_time_type: str) -> bool:
+        """
+        Erstellt eine Zeitbuchung (Start/Ende/Dienstgang)
         
-        #Sucht einen Mitarbeiter anhand der Chip-ID
+        Args:
+            personnel_number: Personalnummer des Mitarbeiters
+            working_time_type: 'start', 'end' oder 'business_trip'
         
-        #Args:
-        #    chip_id: Die RFID-Chip-ID
+        Returns:
+            bool: True bei Erfolg
+        """
+        if not self._ensure_token():
+            logger.error("Konnte keinen gültigen Token erhalten")
+            return False
             
-        #Returns:
-        #    Dictionary mit Mitarbeiterdaten oder None wenn nicht gefunden
-        
         try:
-            # HRworks API v2 - Persons Endpoint
-            url = f"{self.api_url}/persons"
+            # Zeitstempel im korrekten Format: YYYYMMDD"T"HHMMSS"Z"
+            now = datetime.utcnow()
+            timestamp = now.strftime("%Y%m%dT%H%M%SZ")
             
-            # Filter nach dem Custom-Field mit der Chip-ID
-            params = {
-                'filter': f'{self.chip_id_field}=={chip_id}'
-            }
-            
-            response = requests.get(
-                url,
-                headers=self._get_headers(),
-                params=params,
-                timeout=10
-            )
-            
-            response.raise_for_status()
-            data = response.json()
-            
-            # Prüfen ob Mitarbeiter gefunden wurde
-            if data and len(data) > 0:
-                employee = data[0]
-                logger.info(f"Mitarbeiter gefunden: {employee.get('firstName')} {employee.get('lastName')}")
-                return employee
-            else:
-                logger.warning(f"Kein Mitarbeiter mit Chip-ID {chip_id} gefunden")
-                return None
-                
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Fehler bei der API-Anfrage: {str(e)}")
-            return None
-        except Exception as e:
-            logger.error(f"Unerwarteter Fehler: {str(e)}")
-            return None
-    
-    def create_time_booking(self, personnel_number: str, booking_type: str) -> bool:
-        
-        #Erstellt eine Zeitbuchung in HRworks
-        #
-        #Args:
-        #    personnel_number: Die Personalnummer des Mitarbeiters
-        #    booking_type: Art der Buchung ('come', 'go', 'business_trip')
-        #    
-        #Returns:
-        #    True bei Erfolg, False bei Fehler
-        
-        try:
-            # Mapping der Buchungstypen zu HRworks-Typen
-            type_mapping = {
-                'come': 'come',
-                'go': 'go',
-                'business_trip': 'business_trip'
-            }
-            
-            hrworks_type = type_mapping.get(booking_type)
-            if not hrworks_type:
-                logger.error(f"Ungültiger Buchungstyp: {booking_type}")
-                return False
-            
-            # HRworks API v2 - Time Tracking Endpoint
-            url = f"{self.api_url}/time-trackings"
-            
+            # Payload gemäß API-Spezifikation
             payload = {
-                'personnelNumber': personnel_number,
-                'type': hrworks_type,
-                # Zeitstempel wird serverseitig gesetzt
+                "data": [{
+                    "personnelNumber": personnel_number,
+                    "beginDateAndTime": timestamp,
+                    "workingTimeType": working_time_type
+                }]
             }
+            
+            # Falls 'end' - dann auch endDateAndTime setzen
+            if working_time_type == 'end':
+                payload["data"][0]["endDateAndTime"] = timestamp
+            
+            logger.info(f"Sende Zeitbuchung: {payload}")
             
             response = requests.post(
-                url,
+                f"{self.BASE_URL}/working-times",
                 headers=self._get_headers(),
-                json=payload,
-                timeout=10
+                json=payload
             )
             
-            response.raise_for_status()
-            logger.info(f"Buchung erfolgreich für Personalnummer {personnel_number}: {booking_type}")
-            return True
-            
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Fehler beim Erstellen der Buchung: {str(e)}")
-            if hasattr(e.response, 'text'):
-                logger.error(f"API-Antwort: {e.response.text}")
-            return False
+            if response.status_code in [200, 201]:
+                logger.info(f"Zeitbuchung erfolgreich: {working_time_type} für PN {personnel_number}")
+                return True
+            else:
+                logger.error(f"Fehler bei Zeitbuchung: {response.status_code} - {response.text}")
+                return False
+                
         except Exception as e:
-            logger.error(f"Unerwarteter Fehler beim Buchen: {str(e)}")
+            logger.error(f"Fehler bei create_working_time: {str(e)}")
             return False
     
     def get_employee_name(self, employee_data: Dict[str, Any]) -> str:
-        
-        #Extrahiert den vollständigen Namen aus den Mitarbeiterdaten
-        #
-        #Args:
-        #    employee_data: Mitarbeiterdaten von der API
-        #    
-        #Returns:
-        #    Vollständiger Name
-        
-        first_name = employee_data.get('firstName', '')
-        last_name = employee_data.get('lastName', '')
-        return f"{first_name} {last_name}".strip()
+        """Extrahiert Namen aus lokalen Mitarbeiterdaten"""
+        return employee_data.get('name', 'Unbekannt')
     
     def get_personnel_number(self, employee_data: Dict[str, Any]) -> str:
-        
-        #Extrahiert die Personalnummer aus den Mitarbeiterdaten
-        #
-        #Args:
-        #    employee_data: Mitarbeiterdaten von der API
-        #    
-        #Returns:
-        #    Personalnummer
-    
-        return employee_data.get('personnelNumber', '')
+        """Extrahiert Personalnummer aus lokalen Daten"""
+        return employee_data.get('personnel_number', '')
