@@ -14,9 +14,7 @@ ALLOWED_HOSTS = ['*']  # Für Entwicklung, später einschränken!
 # HRworks API
 HRWORKS_ACCESS_KEY = os.getenv('HRWORKS_ACCESS_KEY')
 HRWORKS_SECRET_KEY = os.getenv('HRWORKS_SECRET_KEY')
-
-# RFID Reader
-RFID_READER_URL = os.getenv('RFID_READER_URL', 'http://192.168.178.45')
+HRWORKS_CHIP_ID_FIELD = os.getenv('HRWORKS_CHIP_ID_FIELD', 'TransponderID')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
