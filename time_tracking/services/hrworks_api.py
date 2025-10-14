@@ -3,6 +3,7 @@ import logging
 from typing import Optional
 from django.conf import settings
 from datetime import datetime, timedelta
+from ..models import ChipMapping
 
 logger = logging.getLogger(__name__)
 
@@ -52,54 +53,15 @@ class HRworksAPIClient:
         return self.token
 
     def get_personnel_number_by_chip(self, chip_id: str) -> Optional[str]:
-        #"""
-        #Findet die Personalnummer anhand der Chip-ID
-        #
-        #Args:
-        #    chip_id: RFID-Chip-ID
-        #    
-        #Returns:
-        #    Personalnummer oder None
-        #"""
-        token = self._get_token()
-        if not token:
-            logger.error("Konnte keinen gültigen Token erhalten")
-            return None
-        
+        """Findet die Personalnummer anhand der Chip-ID"""
         try:
-            # Alle Mitarbeiter abrufen
-            response = requests.get(
-                f"{self.BASE_URL}/persons",
-                headers={
-                    "Authorization": f"Bearer {token}",
-                    "Accept": "application/json"
-                }
-            )
+            chip_id = chip_id.strip()
+            mapping = ChipMapping.objects.get(transponder_id=chip_id)
+            logger.info(f"✅ Chip {chip_id} → {mapping.last_name} ({mapping.personnel_number})")
+            return mapping.personnel_number
             
-            if response.status_code == 200:
-                data = response.json()
-                persons = data.get('data', [])
-                
-                # Nach Chip-ID suchen
-                chip_field = settings.HRWORKS_CHIP_ID_FIELD
-                
-                for person in persons:
-                    # Chip-ID kann in verschiedenen Feldern sein
-                    person_chip = person.get(chip_field, '').strip()
-                    
-                    if person_chip == chip_id:
-                        personnel_number = person.get('personnelNumber')
-                        logger.info(f"Chip {chip_id} → Personalnummer {personnel_number}")
-                        return personnel_number
-                
-                logger.warning(f"Keine Personalnummer für Chip-ID {chip_id} gefunden")
-                return None
-            else:
-                logger.error(f"Fehler beim Abrufen der Personen: {response.status_code}")
-                return None
-                
-        except Exception as e:
-            logger.error(f"Fehler bei Chip-Suche: {str(e)}")
+        except ChipMapping.DoesNotExist:
+            logger.warning(f"❌ Keine Zuordnung für Chip-ID '{chip_id}' gefunden")
             return None
 
     def create_working_time(self, personnel_number: str, working_time_type: str) -> bool:
