@@ -10,28 +10,24 @@
 
 <script>
 let chipIdBuffer = '';
-let lastKeyTime = Date.now();
+let lastKeyTime = 0;
 
 document.addEventListener('keypress', function(e) {
     const currentTime = Date.now();
     
-    // Wenn länger als 100ms zwischen Tasten: Buffer zurücksetzen
     if (currentTime - lastKeyTime > 100) {
         chipIdBuffer = '';
     }
     lastKeyTime = currentTime;
     
-    // Enter = Chip-ID komplett
     if (e.key === 'Enter' && chipIdBuffer.length > 0) {
+        // ✅ WICHTIG: trim() entfernt \n, \r und Leerzeichen
         const chipId = chipIdBuffer.trim();
         console.log('RFID erkannt:', chipId);
         
-        // Zu Booking weiterleiten
         window.location.href = `/booking/?chip_id=${encodeURIComponent(chipId)}`;
-        
         chipIdBuffer = '';
     } else if (e.key !== 'Enter') {
-        // Zeichen zum Buffer hinzufügen
         chipIdBuffer += e.key;
     }
 });
