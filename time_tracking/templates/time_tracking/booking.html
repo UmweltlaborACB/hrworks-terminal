@@ -1,55 +1,41 @@
 {% extends 'time_tracking/base.html' %}
 
+{% block title %}Buchung wählen{% endblock %}
+
+{% block body_class %}booking-screen{% endblock %}
+
 {% block content %}
-<div class="container">
-    <h1>👤 Mitarbeiter erkannt</h1>
-    <p class="instruction">Chip-ID: <strong>{{ chip_id }}</strong></p>
-    
-    <!-- Erfolgsmeldungen anzeigen -->
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}" style="
-                padding: 15px;
-                margin: 20px 0;
-                border-radius: 8px;
-                background: {% if message.tags == 'success' %}#10b981{% else %}#ef4444{% endif %};
-                color: white;
-            ">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}
+<div class="booking-container">
+    <h1>Bitte Buchungsart wählen</h1>
     
     <form method="post" action="{% url 'booking' %}">
         {% csrf_token %}
         
-        <div class="button-grid">
-            <button type="submit" name="booking_type" value="Kommen" class="booking-btn">
-                ✅ Kommen
+        <div class="booking-buttons">
+            <button type="submit" name="booking_type" value="Kommen" class="btn-booking btn-kommen">
+                <span class="icon">🟢</span>
+                Kommen
             </button>
-            <button type="submit" name="booking_type" value="Gehen" class="booking-btn">
-                👋 Gehen
+            
+            <button type="submit" name="booking_type" value="Gehen" class="btn-booking btn-gehen">
+                <span class="icon">🔴</span>
+                Gehen
             </button>
-            <button type="submit" name="booking_type" value="Pause Start" class="booking-btn">
-                ⏸️ Pause Start
+            
+            <button type="submit" name="booking_type" value="Dienstgang" class="btn-booking btn-dienstgang">
+                <span class="icon">🚗</span>
+                Dienstgang
             </button>
-            <button type="submit" name="booking_type" value="Pause Ende" class="booking-btn">
-                ▶️ Pause Ende
-            </button>
-        </div>
-        
-        <div class="cancel">
-            <a href="{% url 'scan' %}">← Abbrechen</a>
         </div>
     </form>
+    
+    <a href="{% url 'scan' %}" class="btn-cancel">Abbrechen</a>
 </div>
 
 <script>
-// Auto-Redirect nach Erfolg
-{% if messages %}
+    // Auto-Redirect nach 30 Sekunden ohne Aktion
     setTimeout(function() {
         window.location.href = "{% url 'scan' %}";
-    }, 3000); // Nach 3 Sekunden zurück
-{% endif %}
+    }, 30000);
 </script>
 {% endblock %}
