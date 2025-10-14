@@ -58,7 +58,7 @@ class Employee(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
-        db_table = 'employees'
+        #db_table = 'employees'
         verbose_name = 'Mitarbeiter'
         verbose_name_plural = 'Mitarbeiter'
     

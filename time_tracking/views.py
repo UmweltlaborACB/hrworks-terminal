@@ -7,13 +7,11 @@ from .services.rfid_reader import get_rfid_reader
 from .models import ChipMapping, BookingLog, Employee
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+from django.http import JsonResponse
+from django.utils.decorators import method_decorator
 import json
 import logging
 
-
-from django.http import JsonResponse
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
 
 logger = logging.getLogger(__name__)
 
