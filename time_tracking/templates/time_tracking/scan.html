@@ -1,0 +1,32 @@
+{% extends 'time_tracking/base.html' %}
+
+{% block title %}Bitte Chip auflegen{% endblock %}
+
+{% block body_class %}scan-screen{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Zeiterfassung</h1>
+    <p class="instruction">Bitte Chip auflegen</p>
+    <div class="loading-spinner"></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Automatisch Chip-Status abfragen
+setInterval(function() {
+    fetch('/process-chip/', {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = data.redirect;
+        } else if (data.error && data.error !== 'Kein Chip erkannt') {
+            alert(data.error);
+        }
+    });
+}, 1000); // Alle 1 Sekunde prüfen
+</script>
+{% endblock %}

@@ -2,16 +2,21 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Load environment variables
+# .env laden
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-change-this-in-production')
-
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-CHANGE-ME')
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
+ALLOWED_HOSTS = ['*']  # Für Entwicklung, später einschränken!
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
+# HRworks API
+HRWORKS_ACCESS_KEY = os.getenv('HRWORKS_ACCESS_KEY')
+HRWORKS_SECRET_KEY = os.getenv('HRWORKS_SECRET_KEY')
+
+# RFID Reader
+RFID_READER_URL = os.getenv('RFID_READER_URL', 'http://192.168.178.45')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -65,19 +70,29 @@ TIME_ZONE = 'Europe/Berlin'
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# HRworks API Configuration
-HRWORKS_API_URL = os.getenv('HRWORKS_API_URL')
-HRWORKS_ACCESS_KEY= os.getenv('HRWORKS-ACCESS-KEY')
-HRWORKS_SECRET_KEY= os.getenv('HRWORKS-SECRET-KEY')
-HRWORKS_CHIP_ID_FIELD = os.getenv('HRWORKS_CHIP_ID_FIELD', 'chip_id')
-
-# RFID Reader Konfiguration
-RFID_ANTENNA_GAIN = int(os.getenv('RFID_ANTENNA_GAIN', '4'))
-RFID_READER_TYPE = 'usb_keyboard'  # Für USB-Reader (neuftech)
-# RFID_READER_TYPE = 'development'  # Für Tests ohne Hardware
-
+# Logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'time_tracking': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+}

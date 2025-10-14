@@ -1,80 +1,59 @@
-{% extends "time_tracking/base.html" %}
+{% extends 'time_tracking/base.html' %}
 
-{% block title %}Zeiterfassung - Buchung{% endblock %}
+{% block title %}Buchung wählen{% endblock %}
 
 {% block body_class %}booking-screen{% endblock %}
 
 {% block content %}
-<div class="booking-container">
-    <div class="employee-header">
-        <div class="employee-icon">
-            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="currentColor"/>
-            </svg>
-        </div>
-        <h2 class="employee-name">{{ employee_name }}</h2>
+<div class="container">
+    <h1>Hallo {{ employee_name }}!</h1>
+    <p class="instruction">Was möchten Sie buchen?</p>
+    
+    <div class="button-grid">
+        <button class="booking-btn" data-type="kommen">Kommen</button>
+        <button class="booking-btn" data-type="gehen">Gehen</button>
+        <button class="booking-btn" data-type="dienstgang_start">Dienstgang Start</button>
+        <button class="booking-btn" data-type="dienstgang_ende">Dienstgang Ende</button>
+        <button class="booking-btn" data-type="pause_start">Pause Start</button>
+        <button class="booking-btn" data-type="pause_ende">Pause Ende</button>
     </div>
     
-    <div class="booking-buttons">
-        <form method="post" action="{% url 'booking' %}">
-            {% csrf_token %}
-            
-            <button type="submit" name="booking_type" value="come" class="booking-btn booking-btn-come">
-                <div class="btn-icon">
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z" fill="currentColor"/>
-                        <path d="M12 8l-4 4h3v4h2v-4h3z" fill="currentColor"/>
-                    </svg>
-                </div>
-                <span class="btn-text">Kommen</span>
-            </button>
-            
-            <button type="submit" name="booking_type" value="go" class="booking-btn booking-btn-go">
-                <div class="btn-icon">
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z" fill="currentColor"/>
-                        <path d="M12 16l4-4h-3V8h-2v4H8z" fill="currentColor"/>
-                    </svg>
-                </div>
-                <span class="btn-text">Gehen</span>
-            </button>
-            
-            <button type="submit" name="booking_type" value="business_trip" class="booking-btn booking-btn-business">
-                <div class="btn-icon">
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M20 6h-3V4c0-1.1-.9-2-2-2H9c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM9 4h6v2H9V4zm11 15H4V8h16v11z" fill="currentColor"/>
-                    </svg>
-                </div>
-                <span class="btn-text">Dienstgang</span>
-            </button>
-        </form>
-    </div>
-    
-    <div class="cancel-link">
-        <a href="{% url 'waiting' %}" class="cancel-btn">Abbrechen</a>
-    </div>
+    <p class="cancel"><a href="{% url 'time_tracking:scan' %}">Abbrechen</a></p>
 </div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-    // Auto-Logout nach 30 Sekunden Inaktivit�t
-    let inactivityTimer;
-    
-    function resetTimer() {
-        clearTimeout(inactivityTimer);
-        inactivityTimer = setTimeout(function() {
-            window.location.href = "{% url 'waiting' %}";
-        }, 30000);
-    }
-    
-    // Events die Timer zur�cksetzen
-    document.addEventListener('mousemove', resetTimer);
-    document.addEventListener('mousedown', resetTimer);
-    document.addEventListener('keypress', resetTimer);
-    document.addEventListener('touchstart', resetTimer);
-    
-    // Timer starten
-    resetTimer();
+// Timeout: Nach 15 Sekunden zurück zur Scan-Seite
+let timeout = setTimeout(function() {
+    window.location.href = "{% url 'time_tracking:scan' %}";
+}, 15000);
+
+// Button-Klicks
+document.querySelectorAll('.booking-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        clearTimeout(timeout);
+        
+        const bookingType = this.dataset.type;
+        const formData = new FormData();
+        formData.append('booking_type', bookingType);
+        
+        fetch('/booking/', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('✓ Buchung erfolgreich!');
+                setTimeout(() => {
+                    window.location.href = "{% url 'time_tracking:scan' %}";
+                }, 2000);
+            } else {
+                alert('✗ Fehler: ' + data.error);
+            }
+        });
+    });
+});
 </script>
 {% endblock %}
