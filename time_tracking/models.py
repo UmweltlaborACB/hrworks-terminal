@@ -50,7 +50,7 @@ class BookingLog(models.Model):
         return f"{status} {self.employee_name} - {self.get_booking_type_display()} ({self.timestamp})"
     
 class Employee(models.Model):
-    """Lokale Zuordnung: Chip-ID → HRworks Personalnummer"""
+    #"""Lokale Zuordnung: Chip-ID → HRworks Personalnummer"""
     chip_id = models.CharField(max_length=50, unique=True, db_index=True)
     personnel_number = models.CharField(max_length=20)
     name = models.CharField(max_length=200)

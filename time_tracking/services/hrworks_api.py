@@ -16,7 +16,7 @@ class HRworksAPIClient:
         self.token_expiry = None
         
     def _authenticate(self) -> bool:
-        """Holt JWT-Token von HRworks gemäß API-Spezifikation"""
+        #"""Holt JWT-Token von HRworks gemäß API-Spezifikation"""
         try:
             response = requests.post(
                 f"{self.BASE_URL}/authentication",
@@ -46,13 +46,13 @@ class HRworksAPIClient:
             return False
     
     def _ensure_token(self) -> bool:
-        """Stellt sicher, dass ein gültiger Token vorhanden ist"""
+        #"""Stellt sicher, dass ein gültiger Token vorhanden ist"""
         if not self.token or not self.token_expiry or datetime.now() >= self.token_expiry:
             return self._authenticate()
         return True
     
     def _get_headers(self) -> Dict[str, str]:
-        """Gibt Header mit JWT-Token zurück"""
+        #"""Gibt Header mit JWT-Token zurück"""
         return {
             "Authorization": f"Bearer {self.token}",
             "Accept": "application/json",
@@ -60,16 +60,16 @@ class HRworksAPIClient:
         }
     
     def create_working_time(self, personnel_number: str, working_time_type: str) -> bool:
-        """
-        Erstellt eine Zeitbuchung (Start/Ende/Dienstgang)
-        
-        Args:
-            personnel_number: Personalnummer des Mitarbeiters
-            working_time_type: 'start', 'end' oder 'business_trip'
-        
-        Returns:
-            bool: True bei Erfolg
-        """
+        #"""
+        #Erstellt eine Zeitbuchung (Start/Ende/Dienstgang)
+        #
+        #         #Args:
+        #    personnel_number: Personalnummer des Mitarbeiters
+        #    working_time_type: 'start', 'end' oder 'business_trip'
+       ## 
+        #Returns:
+        #    bool: True bei Erfolg
+        #"""
         if not self._ensure_token():
             logger.error("Konnte keinen gültigen Token erhalten")
             return False
@@ -111,10 +111,10 @@ class HRworksAPIClient:
             logger.error(f"Fehler bei create_working_time: {str(e)}")
             return False
     
-    def get_employee_name(self, employee_data: Dict[str, Any]) -> str:
-        """Extrahiert Namen aus lokalen Mitarbeiterdaten"""
-        return employee_data.get('name', 'Unbekannt')
+    def get_employee_name(self, employee: Dict[str, Any]) -> str:
+        #"""Extrahiert Namen aus lokalen Mitarbeiterdaten"""
+        return employee.get('name', 'Unbekannt')
     
-    def get_personnel_number(self, employee_data: Dict[str, Any]) -> str:
-        """Extrahiert Personalnummer aus lokalen Daten"""
-        return employee_data.get('personnel_number', '')
+    def get_personnel_number(self, employee: Dict[str, Any]) -> str:
+        #"""Extrahiert Personalnummer aus lokalen Daten"""
+        return employee.get('personnel_number', '')
