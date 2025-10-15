@@ -30,10 +30,17 @@
                 Dienstgang
             </button>
             </p>
+
+            <p>
+            <button type="submit" name="booking_type" value="Abbrechen" class="btn-cancel">
+                <span class="icon">🚗</span>
+                <a href="{% url 'scan' %}" class="btn-cancel">Abbrechen</a>
+            </button>
+            </p>
         </div>
     </form>
     
-    <a href="{% url 'scan' %}" class="btn-cancel">Abbrechen</a>
+    
 </div>
 
 <script>
