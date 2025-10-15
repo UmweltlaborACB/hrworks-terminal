@@ -132,8 +132,8 @@ class HRworksAPIClient:
         
         # Booking-Type → HRworks-Type
         type_mapping = {
-            "Kommen": "work",
-            "Gehen": "work", 
+            "Kommen": "Standard",
+            "Gehen": "Standard", 
             "Dienstgang": "businessTrip"
         } 
         # Action Type
@@ -150,3 +150,5 @@ class HRworksAPIClient:
         
         # Zeitbuchung erstellen
         return self.create_working_time(personnel_number, hrworks_type, action_type)
+
+    
