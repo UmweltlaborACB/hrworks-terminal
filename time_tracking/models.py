@@ -31,6 +31,10 @@ class ChipMapping(models.Model):
         max_length=50,
         verbose_name="Personalnummer"
     )
+    first_name = models.CharField(
+        max_length=100,
+        verbose_name="Vorname"
+    )
     last_name = models.CharField(
         max_length=100,
         verbose_name="Nachname"

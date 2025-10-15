@@ -1,52 +1,52 @@
 {% extends 'time_tracking/base.html' %}
 
-{% block title %}Buchung wählen{% endblock %}
-
-{% block body_class %}booking-screen{% endblock %}
-
 {% block content %}
 <div class="booking-container">
-    <h1>Bitte Buchungsart wählen</h1>
+    {% if first_name %}
+        <h1>Hallo {{ first_name }}, schön dass du da bist! 👋</h1>
+    {% elif full_name %}
+        <h1>Hallo {{ full_name }}, schön dass du da bist! 👋</h1>
+    {% else %}
+        <h1>Willkommen! 👋</h1>
+        <p class="text-warning">⚠️ Chip-ID {{ chip_id }} ist noch nicht zugeordnet.</p>
+    {% endif %}
     
-    <form method="post" action="{% url 'booking' %}">
-        {% csrf_token %}
-        
-        <div class="booking-buttons">
-            <p><button type="submit" name="booking_type" value="Kommen" class="btn-booking btn-kommen">
-                <span class="icon">🟢</span>
+    <div class="button-grid">
+        <form method="post" action="{% url 'process_booking' %}">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="start">
+            <button type="submit" class="btn-action btn-start">
+                <i class="fas fa-sign-in-alt"></i>
                 Kommen
-            </button></p>
-            
-            <p>
-            <button type="submit" name="booking_type" value="Gehen" class="btn-booking btn-gehen">
-                <span class="icon">🔴</span>
+            </button>
+        </form>
+
+        <form method="post" action="{% url 'process_booking' %}">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="end">
+            <button type="submit" class="btn-action btn-end">
+                <i class="fas fa-sign-out-alt"></i>
                 Gehen
             </button>
-            </p>
-            
-            <p>
-            <button type="submit" name="booking_type" value="Dienstgang" class="btn-booking btn-dienstgang">
-                <span class="icon">🚗</span>
+        </form>
+
+        <form method="post" action="{% url 'process_booking' %}">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="break">
+            <button type="submit" class="btn-action btn-break">
+                <i class="fas fa-coffee"></i>
+                Pause
+            </button>
+        </form>
+
+        <form method="post" action="{% url 'process_booking' %}">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="business_trip">
+            <button type="submit" class="btn-action btn-business">
+                <i class="fas fa-briefcase"></i>
                 Dienstgang
             </button>
-            </p>
-
-            <p>
-            <button type="submit" name="booking_type" value="Abbrechen" class="btn-cancel">
-                <span class="icon"></span>
-                <a href="{% url 'scan' %}" class="btn-cancel">Abbrechen</a>
-            </button>
-            </p>
-        </div>
-    </form>
-    
-    
+        </form>
+    </div>
 </div>
-
-<script>
-    // Auto-Redirect nach 30 Sekunden ohne Aktion
-    setTimeout(function() {
-        window.location.href = "{% url 'scan' %}";
-    }, 30000);
-</script>
 {% endblock %}
