@@ -139,9 +139,9 @@ class HRworksAPIClient:
         } 
         # Action Type
         action_mapping = {
-            "Kommen": "clockIN",
+            "Kommen": "clockIn",
             "Gehen": "clockOut",  
-            "Dienstgang": "clockIN"
+            "Dienstgang": "clockIn"
         }
         
         hrworks_type = type_mapping.get(booking_type)
