@@ -91,7 +91,7 @@ class HRworksAPIClient:
             
             params = {
                 "action": action,
-                "type": "ACB AZ"
+                "type": "workingTime"
             }
             
             logger.info(f"🔵 API Request: POST {url}?action={action}")
