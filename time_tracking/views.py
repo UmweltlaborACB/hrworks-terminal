@@ -61,7 +61,7 @@ class BookingView(View):
         try:
             # HRworks API aufrufen
             hrworks_client = HRworksAPIClient()  
-            result = hrworks_client.book_time(chip_id, booking_type, action_type)
+            result = hrworks_client.book_time(chip_id, booking_type)
             
             if result:
                 messages.success(request, f'✅ {booking_type} erfolgreich gebucht!')
