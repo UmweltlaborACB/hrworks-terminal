@@ -12,7 +12,7 @@
     {% endif %}
     
     <div class="button-grid">
-        <form method="post" action="{% url 'process_booking' %}">
+        <form method="post" action="{% url 'booking' %}">
             {% csrf_token %}
             <input type="hidden" name="action" value="start">
             <button type="submit" class="btn-action btn-start">
@@ -21,7 +21,7 @@
             </button>
         </form>
 
-        <form method="post" action="{% url 'process_booking' %}">
+        <form method="post" action="{% url 'booking' %}">
             {% csrf_token %}
             <input type="hidden" name="action" value="end">
             <button type="submit" class="btn-action btn-end">
@@ -30,7 +30,7 @@
             </button>
         </form>
 
-        <form method="post" action="{% url 'process_booking' %}">
+        <form method="post" action="{% url 'booking' %}">
             {% csrf_token %}
             <input type="hidden" name="action" value="break">
             <button type="submit" class="btn-action btn-break">
@@ -39,7 +39,7 @@
             </button>
         </form>
 
-        <form method="post" action="{% url 'process_booking' %}">
+        <form method="post" action="{% url 'booking' %}">
             {% csrf_token %}
             <input type="hidden" name="action" value="business_trip">
             <button type="submit" class="btn-action btn-business">
