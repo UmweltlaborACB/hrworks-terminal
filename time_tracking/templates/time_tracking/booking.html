@@ -32,15 +32,6 @@
 
         <form method="post" action="{% url 'booking' %}">
             {% csrf_token %}
-            <input type="hidden" name="action" value="break">
-            <button type="submit" class="btn-action btn-break">
-                <i class="fas fa-coffee"></i>
-                Pause
-            </button>
-        </form>
-
-        <form method="post" action="{% url 'booking' %}">
-            {% csrf_token %}
             <input type="hidden" name="action" value="business_trip">
             <button type="submit" class="btn-action btn-business">
                 <i class="fas fa-briefcase"></i>
