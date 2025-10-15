@@ -64,7 +64,7 @@ class HRworksAPIClient:
             logger.warning(f"❌ Keine Zuordnung für Chip-ID '{chip_id}' gefunden")
             return None
 
-    def create_working_time(self, personnel_number: str, working_time_type: str) -> bool:
+    def create_working_time(self, personnel_number: str, working_time_type: str, action: str) -> bool:
         #"""
         #Erstellt eine Zeitbuchung in HRworks
         #
@@ -87,7 +87,8 @@ class HRworksAPIClient:
                 "data": [{
                     "personIdentifier": personnel_number,
                     "beginDateAndTime": now,
-                    "workingTimeType": working_time_type
+                    "workingTimeType": working_time_type,
+                    "action": action
                 }]
             }
 
@@ -112,7 +113,7 @@ class HRworksAPIClient:
             logger.error(f"Fehler bei Zeitbuchung: {str(e)}")
             return False
 
-    def book_time(self, chip_id: str, booking_type: str) -> bool:
+    def book_time(self, chip_id: str, booking_type: str, action_type: str) -> bool:
         #"""
         #Vereinfachte Methode: Von Chip-ID zur Zeitbuchung
        # 
@@ -132,8 +133,14 @@ class HRworksAPIClient:
         # Booking-Type → HRworks-Type
         type_mapping = {
             "Kommen": "work",
-            "Gehen": "work",  # Ende wird automatisch erkannt
+            "Gehen": "work", 
             "Dienstgang": "businessTrip"
+        } 
+        # Action Type
+        type_mapping = {
+            "Kommen": "clockIN",
+            "Gehen": "clockOut",  
+            "Dienstgang": "clockIN"
         }
         
         hrworks_type = type_mapping.get(booking_type)
@@ -142,4 +149,4 @@ class HRworksAPIClient:
             return False
         
         # Zeitbuchung erstellen
-        return self.create_working_time(personnel_number, hrworks_type)
+        return self.create_working_time(personnel_number, hrworks_type, action_type)

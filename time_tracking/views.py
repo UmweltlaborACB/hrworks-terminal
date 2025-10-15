@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib import messages
-from .services.hrworks_api import HRworksAPIClient  # ← RICHTIG!
+from .services.hrworks_api import HRworksAPIClient
 import logging
 
 logger = logging.getLogger(__name__)
