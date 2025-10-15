@@ -87,8 +87,8 @@ class HRworksAPIClient:
                 "data": [{
                     #"personIdentifier": personnel_number,
                     #"beginDateAndTime": now,
-                    "type": working_time_type,
-                    "action": action
+                    #"type": working_time_type,
+                    #"action": action
                 }]
             }
 
