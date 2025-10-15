@@ -137,18 +137,19 @@ class HRworksAPIClient:
             "Dienstgang": "Dienstgang"
         } 
         # Action Type
-        type_mapping = {
+        action_mapping = {
             "Kommen": "clockIN",
             "Gehen": "clockOut",  
             "Dienstgang": "clockIN"
         }
         
         hrworks_type = type_mapping.get(booking_type)
+        hrworks_action = action_mapping.get(booking_type)
         if not hrworks_type:
             logger.error(f"Unbekannter Buchungstyp: {booking_type}")
             return False
         
         # Zeitbuchung erstellen
-        return self.create_working_time(personnel_number, hrworks_type, action_type)
+        return self.create_working_time(personnel_number, hrworks_type, hrworks_action)
 
     
