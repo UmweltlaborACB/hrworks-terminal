@@ -134,7 +134,7 @@ class HRworksAPIClient:
         type_mapping = {
             "Kommen": "Standard",
             "Gehen": "Standard", 
-            "Dienstgang": "businessTrip"
+            "Dienstgang": "Dienstgang"
         } 
         # Action Type
         type_mapping = {
