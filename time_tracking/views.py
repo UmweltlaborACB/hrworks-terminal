@@ -37,6 +37,7 @@ class BookingView(View):
         """Verarbeitet die Buchung"""
         chip_id = request.session.get('chip_id')
         booking_type = request.POST.get('booking_type')
+        action_type = request.POST.get('action_type')
         
         if not chip_id:
             messages.error(request, 'Chip-ID verloren gegangen!')
@@ -49,7 +50,7 @@ class BookingView(View):
         try:
             # HRworks API aufrufen
             hrworks_client = HRworksAPIClient()  
-            result = hrworks_client.book_time(chip_id, booking_type)
+            result = hrworks_client.book_time(chip_id, booking_type, action_type)
             
             if result:
                 messages.success(request, f'✅ {booking_type} erfolgreich gebucht!')
