@@ -93,7 +93,7 @@ class HRworksAPIClient:
             }
 
             response = requests.post(
-                f"{self.BASE_URL}/working-times",
+                f"{self.BASE_URL}/persons/{personnel_number}/working-times",
                 json=payload,
                 headers={
                     "Authorization": f"Bearer {token}",
