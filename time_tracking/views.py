@@ -43,3 +43,38 @@ class BookingView(View):
             'first_name': chip_mapping.first_name if chip_mapping else None,
         }
         return render(request, 'time_tracking/booking.html', context)
+    
+    def post(self, request):
+        """Verarbeitet die Buchung"""
+        chip_id = request.session.get('chip_id')
+        booking_type = request.POST.get('booking_type')
+        action_type = request.POST.get('action_type')
+        
+        if not chip_id:
+            messages.error(request, 'Chip-ID verloren gegangen!')
+            return redirect('scan')
+        
+        if not booking_type:
+            messages.error(request, 'Bitte Buchungsart wählen!')
+            return redirect('booking')
+        
+        try:
+            # HRworks API aufrufen
+            hrworks_client = HRworksAPIClient()  
+            result = hrworks_client.book_time(chip_id, booking_type, action_type)
+            
+            if result:
+                messages.success(request, f'✅ {booking_type} erfolgreich gebucht!')
+            else:
+                messages.error(request, '❌ Buchung fehlgeschlagen!')
+            
+        except Exception as e:
+            logger.error(f"Fehler bei Buchung: {str(e)}")
+            messages.error(request, f'❌ Fehler: {str(e)}')
+        
+        # Session aufräumen
+        if 'chip_id' in request.session:
+            del request.session['chip_id']
+        
+        # Zurück zur Scan-Seite
+        return redirect('scan')

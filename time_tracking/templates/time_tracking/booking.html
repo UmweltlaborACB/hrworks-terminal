@@ -14,8 +14,8 @@
     <div class="button-grid">
         <form method="post" action="{% url 'booking' %}">
             {% csrf_token %}
-            <input type="hidden" name="action" value="start">
-            <button type="submit" class="btn-action btn-start">
+            <input type="hidden" name="action" value="Kommen">
+            <button type="submit" class="btn-action btn-kommen">
                 <i class="fas fa-sign-in-alt"></i>
                 Kommen
             </button>
@@ -23,8 +23,8 @@
 
         <form method="post" action="{% url 'booking' %}">
             {% csrf_token %}
-            <input type="hidden" name="action" value="end">
-            <button type="submit" class="btn-action btn-end">
+            <input type="hidden" name="action" value="Gehen">
+            <button type="submit" class="btn-action btn-gehen">
                 <i class="fas fa-sign-out-alt"></i>
                 Gehen
             </button>
@@ -32,14 +32,14 @@
 
         <form method="post" action="{% url 'booking' %}">
             {% csrf_token %}
-            <input type="hidden" name="action" value="business_trip">
-            <button type="submit" class="btn-action btn-business">
+            <input type="hidden" name="action" value="Dienstgang">
+            <button type="submit" class="btn-action btn-dienstgang">
                 <i class="fas fa-briefcase"></i>
                 Dienstgang
             </button>
         </form>
         <button type="submit" name="booking_type" value="Abbrechen" class="btn-cancel">
-                <span class="icon"></span>
+                
                 <a href="{% url 'scan' %}" class="btn-cancel">Abbrechen</a>
         </button>
 
