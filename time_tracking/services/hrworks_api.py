@@ -85,9 +85,9 @@ class HRworksAPIClient:
 
             payload = {
                 "data": [{
-                    "personIdentifier": personnel_number,
-                    "beginDateAndTime": now,
-                    "workingTimeType": working_time_type,
+                    #"personIdentifier": personnel_number,
+                    #"beginDateAndTime": now,
+                    "type": working_time_type,
                     "action": action
                 }]
             }
@@ -113,7 +113,7 @@ class HRworksAPIClient:
             logger.error(f"Fehler bei Zeitbuchung: {str(e)}")
             return False
 
-    def book_time(self, chip_id: str, booking_type: str, action_type: str) -> bool:
+    def book_time(self, chip_id: str, booking_type: str) -> bool:
         #"""
         #Vereinfachte Methode: Von Chip-ID zur Zeitbuchung
        # 
