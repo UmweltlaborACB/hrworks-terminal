@@ -8,8 +8,8 @@ from ..models import ChipMapping
 logger = logging.getLogger(__name__)
 
 class HRworksAPIClient:
-    BASE_URL = "https://api.hrworks.de/v2"
-
+    BASE_URL = settings.HRWORKS_API_URL
+    
     def __init__(self):
         self.access_key = settings.HRWORKS_ACCESS_KEY
         self.secret_key = settings.HRWORKS_SECRET_KEY
