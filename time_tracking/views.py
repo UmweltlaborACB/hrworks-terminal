@@ -48,7 +48,6 @@ class BookingView(View):
         """Verarbeitet die Buchung"""
         chip_id = request.session.get('chip_id')
         booking_type = request.POST.get('booking_type')
-        action_type = request.POST.get('action_type')
         
         if not chip_id:
             messages.error(request, 'Chip-ID verloren gegangen!')

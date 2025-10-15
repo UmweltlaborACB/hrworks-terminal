@@ -87,7 +87,7 @@ class HRworksAPIClient:
                 "data": [{
                     "personIdentifier": personnel_number,
                     "beginDateAndTime": now,
-                    #"action": action,
+                    "action": action,
                     "type": working_time_type
                 }]
             }
@@ -141,7 +141,7 @@ class HRworksAPIClient:
         action_mapping = {
             "Kommen": "clockIn",
             "Gehen": "clockOut",  
-            "Dienstgang": "clockIn"
+            "Dienstgang": "1"
         }
         
         hrworks_type = type_mapping.get(booking_type)
