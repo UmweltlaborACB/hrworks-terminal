@@ -4,18 +4,10 @@ Django-basiertes Zeiterfassungsterminal für Raspberry Pi mit RFID-Reader und HR
 
 Das aktuelle Projekt läuft zu Testzwecken noch mit einem USB Reader
 
-## Features
+Aktuell ist das Stempeln von "Kommen", "Gehen" und "Dienstgang" eingeplant.
 
--  Touchscreen-optimiertes Interface im Hochformat
--  RFID-Chip-basierte Authentifizierung
--  Zeitbuchungen: Kommen, Gehen, Dienstgang
--  Direkte Integration mit HRworks API v2
--  Logging aller Buchungen in lokaler Datenbank
--  Modernes, benutzerfreundliches Design
+Im Moment wird der Chip per JavaScript direkt von der Website gelesen, der Leser muss also nicht am Server angeschlossen sein.
+Der Leser sollte als HID Gerät funktionieren, damit die ID ausgelesen werden kann.(Ändert sich eventuell noch, je nach Hardwareaufbau) 
 
-## Hardware-Anforderungen
 
-- Raspberry Pi (3B+ oder höher empfohlen)
-- MFRC522 RFID-Reader 
-- Touchscreen-Display
-- RFID-Chips für Mitarbeiter
+Um nicht unnötig API Calls machen zu müssen läuft die Zuordnung Transponder -> Mitarbeiter(Über einen Hinweis ob ich /persons direkt nach einem CustomField durchsuchen kann würde ich mich freuen) 
