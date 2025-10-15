@@ -101,7 +101,7 @@ class HRworksAPIClient:
                     "Content-Type": "application/json"
                 }
             )
-            logger.info(f"{self.BASE_URL}/persons/{personnel_number}/working-times",json=payload, headers={"Authorization": f"Bearer {token}","Accept": "application/json","Content-Type": "application/json"})
+            logger.info(f"{self.BASE_URL}/persons/{personnel_number}/working-times, {payload}")
             logger.info(f"HRworks Antwort: {response.text}")
             if response.status_code in [200, 201]:
                 logger.info(f"Zeitbuchung erfolgreich für PN {personnel_number}: {working_time_type}")
