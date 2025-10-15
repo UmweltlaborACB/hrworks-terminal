@@ -1,48 +1,44 @@
 {% extends 'time_tracking/base.html' %}
 
+{% block title %}Buchung wählen{% endblock %}
+
+{% block body_class %}booking-screen{% endblock %}
+
 {% block content %}
 <div class="booking-container">
-    {% if first_name %}
-        <h1>Hallo {{ first_name }}, schön dass du da bist! 👋</h1>
-    {% elif full_name %}
-        <h1>Hallo {{ full_name }}, schön dass du da bist! 👋</h1>
-    {% else %}
-        <h1>Willkommen! 👋</h1>
-        <p class="text-warning">⚠️ Chip-ID {{ chip_id }} ist noch nicht zugeordnet.</p>
-    {% endif %}
+    <h1>Bitte Buchungsart wählen</h1>
     
-    <div class="button-grid">
-        <form method="post" action="{% url 'booking' %}">
-            {% csrf_token %}
-            <input type="hidden" name="action" value="Kommen">
-            <button type="submit" class="btn-action btn-kommen">
-                <i class="fas fa-sign-in-alt"></i>
+    <form method="post" action="{% url 'booking' %}">
+        {% csrf_token %}
+        
+        <div class="booking-buttons">
+            <p><button type="submit" name="booking_type" value="Kommen" class="btn-booking btn-kommen">
+                <span class="icon">🟢</span>
                 Kommen
-            </button>
-        </form>
-
-        <form method="post" action="{% url 'booking' %}">
-            {% csrf_token %}
-            <input type="hidden" name="action" value="Gehen">
-            <button type="submit" class="btn-action btn-gehen">
-                <i class="fas fa-sign-out-alt"></i>
+            </button></p>
+            
+            <p>
+            <button type="submit" name="booking_type" value="Gehen" class="btn-booking btn-gehen">
+                <span class="icon">🔴</span>
                 Gehen
             </button>
-        </form>
-
-        <form method="post" action="{% url 'booking' %}">
-            {% csrf_token %}
-            <input type="hidden" name="action" value="Dienstgang">
-            <button type="submit" class="btn-action btn-dienstgang">
-                <i class="fas fa-briefcase"></i>
+            </p>
+            
+            <p>
+            <button type="submit" name="booking_type" value="Dienstgang" class="btn-booking btn-dienstgang">
+                <span class="icon">🚗</span>
                 Dienstgang
             </button>
-        </form>
-        <button type="submit" name="booking_type" value="Abbrechen" class="btn-cancel">
-                
-                <a href="{% url 'scan' %}" class="btn-cancel">Abbrechen</a>
-        </button>
+            </p>
 
-    </div>
+            <p>
+            <button type="submit" name="booking_type" value="Abbrechen" class="btn-cancel">
+                <span class="icon"></span>
+                <a href="{% url 'scan' %}" class="btn-cancel">Abbrechen</a>
+            </button>
+            </p>
+        </div>
+    </form>
+    
+    
 </div>
-{% endblock %}
