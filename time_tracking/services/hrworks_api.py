@@ -85,8 +85,8 @@ class HRworksAPIClient:
 
             payload = {
                 "data": [{
-                    #"personIdentifier": personnel_number,
-                    #"beginDateAndTime": now,
+                    "personIdentifier": personnel_number,
+                    "beginDateAndTime": now,
                     "action": action,
                     "type": working_time_type
                 }]
@@ -94,8 +94,7 @@ class HRworksAPIClient:
 
             response = requests.post(
                 f"{self.BASE_URL}/persons/{personnel_number}/working-times",
-                #json=payload,
-                payload,
+                json=payload,
                 headers={
                     "Authorization": f"Bearer {token}",
                     "Accept": "application/json",
