@@ -132,8 +132,8 @@ class HRworksAPIClient:
         
         # Booking-Type → HRworks-Type
         type_mapping = {
-            "Kommen": "work",
-            "Gehen": "work", 
+            "Kommen": "ACB ZE",
+            "Gehen": "ACB ZE", 
             "Dienstgang": "Dienstgang"
         } 
         # Action Type
