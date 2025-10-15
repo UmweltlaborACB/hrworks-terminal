@@ -101,7 +101,7 @@ class HRworksAPIClient:
                     "Content-Type": "application/json"
                 }
             )
-
+            logger.info(f"HRworks Antwort: {response}")
             if response.status_code in [200, 201]:
                 logger.info(f"Zeitbuchung erfolgreich für PN {personnel_number}: {working_time_type}")
                 return True
