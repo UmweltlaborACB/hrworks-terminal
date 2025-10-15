@@ -139,8 +139,8 @@ class HRworksAPIClient:
         } 
         # Action Type
         action_mapping = {
-            "Kommen": "clockIn",
-            "Gehen": "clockOut",  
+            "Kommen": "clockin",
+            "Gehen": "clockout",  
             "Dienstgang": "clockIn"
         }
         
