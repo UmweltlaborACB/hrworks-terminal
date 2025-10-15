@@ -107,7 +107,7 @@ class HRworksAPIClient:
                 logger.info(f"Zeitbuchung erfolgreich für PN {personnel_number}: {working_time_type}")
                 return True
             else:
-                logger.error(f"Zeitbuchung fehlgeschlagen: {response.status_code - {response.text}")
+                logger.error(f"Zeitbuchung fehlgeschlagen: {response.status_code} - {response.text}")
                 return False
 
         except Exception as e:
