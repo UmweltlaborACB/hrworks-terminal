@@ -20,29 +20,27 @@
         {% csrf_token %}
         
         <div class="booking-buttons">
-            <p><button type="submit" name="start" value="Kommen" class="booking-btn">
-                <span class="icon">🟢</span>
+            <p><button type="submit" name="start" value="Kommen" class="booking-btn" background-color="green">
+                
                 Kommen
             </button></p>
             
             <p>
-            <button type="submit" name="end" value="Gehen" class="booking-btn">
-                <span class="icon">🔴</span>
+            <button type="submit" name="end" value="Gehen" class="booking-btn" background-color="red">
+                
                 Gehen
             </button>
             </p>
             
             <p>
             <button type="submit" name="business_trip" value="Dienstgang" class="booking-btn">
-                <span class="icon">🚗</span>
                 Dienstgang
             </button>
             </p>
 
             <p>
             <button type="submit" name="cancel" value="Abbrechen" class="booking-btn" action="{% url 'scan' %}">
-                <span class="icon"></span>
-                Abbrechen
+                 Abbrechen
             </button>
             </p>
         </div>
