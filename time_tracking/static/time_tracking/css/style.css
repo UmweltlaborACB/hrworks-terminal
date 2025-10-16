@@ -57,6 +57,7 @@ h1 {
 }
 
 .booking-btn {
+    width: 90%;
     display: flex;
     font-size: 2rem;
     font-weight: bold;
