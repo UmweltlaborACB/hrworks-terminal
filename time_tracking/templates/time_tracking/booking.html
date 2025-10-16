@@ -7,16 +7,16 @@
 {% block content %}
 <div class="booking-container">
     {% if first_name %}
-        <h1>Hallo {{ first_name }}, schön dass du da bist!</h1>
+        <h1>Hallo {{ first_name }}</h1>
     {% elif full_name %}
-        <h1>Hallo {{ full_name }}, schön dass du da bist!</h1>
+        <h1>Hallo {{ full_name }}</h1>
     {% else %}
         <h1>Willkommen! 👋</h1>
         <p class="text-warning">Transponder {{ chip_id }} ist noch nicht zugeordnet.</p>
     {% endif %}
     <h2>Bitte Buchungsart wählen</h2>
     
-    <form method="post" action="{% url 'booking' %}"   display: block margin-top: 0em>
+    <form method="post" action="{% url 'booking' %}" class="booking-form">  
         {% csrf_token %}
         
         <div class="booking-buttons">
