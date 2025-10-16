@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib import messages
+from django.conf import settings
 from .services.hrworks_api import HRworksAPIClient
 from .models import ChipMapping
 import logging
@@ -9,9 +10,15 @@ logger = logging.getLogger(__name__)
 
 class ScanView(View):
     """Startseite - Warten auf RFID-Chip"""
-    
+
+
+
+
     def get(self, request):
-        return render(request, 'time_tracking/scan.html')
+        context = {
+            'company_name': settings.COMPANY_NAME,
+        }
+        return render(request, 'time_tracking/scan.html', context)
 
     
 class BookingView(View):
