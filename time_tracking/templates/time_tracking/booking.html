@@ -16,7 +16,7 @@
     {% endif %}
     <h2>Bitte Buchungsart wählen</h2>
     
-    <form method="post" action="{% url 'booking' %}">
+    <form method="post" action="{% url 'booking' %}"   display: block margin-top: 0em>
         {% csrf_token %}
         
         <div class="booking-buttons">
