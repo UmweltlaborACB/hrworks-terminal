@@ -57,14 +57,13 @@ h1 {
 }
 
 .booking-btn {
-    padding: 50px 40px;
+    height: 134px;
+    width: 104px;
+    display: flex;
     font-size: 5rem;
     font-weight: bold;
     color: #667eea;
     background: white;
-    border: none;
-    border-radius: 15px;
-    cursor: pointer;
     transition: all 0.3s;
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
