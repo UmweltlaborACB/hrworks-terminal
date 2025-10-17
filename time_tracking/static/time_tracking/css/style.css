@@ -6,7 +6,7 @@
 }
 
 body {
-    font-family: LinotypeSyntax-Regular, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif,;
+    font-family: "LinotypeSyntax-Regular";
     background-color: #6ba4ed;
     display: flex;
     justify-content: center;
