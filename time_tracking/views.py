@@ -8,12 +8,11 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+    
 class ScanView(View):
-    """Startseite - Warten auf RFID-Chip"""
+    """Startseite - Chip scannen"""
 
-
-
-
+    #Firmennamen aus settings holen
     def get(self, request):
         context = {
             'company_name': settings.COMPANY_NAME,
@@ -34,7 +33,7 @@ class BookingView(View):
         # Chip-ID im Session speichern
         request.session['chip_id'] = chip_id
 
-        # Chip-Mapping holen
+        # Chip-Mapping holen um den Namen zur Begrüßung anzuzeigen
         try:
             chip_mapping = ChipMapping.objects.get(transponder_id=chip_id)
             full_name = f"{chip_mapping.first_name} {chip_mapping.last_name}" if chip_mapping.first_name else chip_mapping.last_name
