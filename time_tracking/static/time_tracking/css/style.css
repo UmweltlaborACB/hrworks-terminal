@@ -78,6 +78,25 @@ h1 {
     transform: translateY(0);
 }
 
+.booking-start {
+    background-color: #4CAF50; /* Green */
+    color: white;
+}
+.booking-end {
+    background-color: #f44336; /* Red */
+    color: white;
+}
+.booking-business-trip {
+    background-color: #2196F3; /* Blue */
+    color: white;
+}   
+.booking-cancel {
+    background-color: #808080; /* Gray */
+    color: white;
+} 
+
+
+
 .bookinbg-form {
     display: flex;
     margin-top: 0em
