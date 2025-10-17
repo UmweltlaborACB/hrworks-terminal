@@ -4,7 +4,9 @@ from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
-
+#
+#Aktuell nicht erforderlich, da über JavaScript ausgelesen wird.
+#
 class RFIDReader:
     def __init__(self):
         self.reader_url = settings.RFID_READER_URL
