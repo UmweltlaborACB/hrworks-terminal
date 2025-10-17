@@ -34,9 +34,9 @@ h1 {
 }
 
 .greeting-container {
+    text-align: center;;
     font-size: 2rem;
     margin-bottom: 50px;
-  
 }
 
 .instruction {
