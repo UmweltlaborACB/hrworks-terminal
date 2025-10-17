@@ -35,14 +35,14 @@ class HRworksAPIClient:
                 data = response.json()
                 self.token = data.get('token')
                 self.token_expiry = datetime.now() + timedelta(minutes=14)
-                logger.info("✅ HRworks Authentifizierung erfolgreich")
+                logger.info("HRworks Authentifizierung erfolgreich")
                 return True
             else:
-                logger.error(f"❌ Authentifizierung fehlgeschlagen: {response.status_code} - {response.text}")
+                logger.error(f"Authentifizierung fehlgeschlagen: {response.status_code} - {response.text}")
                 return False
 
         except Exception as e:
-            logger.error(f"❌ Fehler bei Authentifizierung: {str(e)}")
+            logger.error(f"Fehler bei Authentifizierung: {str(e)}")
             return False
 
     def _get_token(self) -> Optional[str]:
@@ -57,11 +57,11 @@ class HRworksAPIClient:
         try:
             chip_id = chip_id.strip()
             mapping = ChipMapping.objects.get(transponder_id=chip_id)
-            logger.info(f"✅ Chip {chip_id} → {mapping.last_name} ({mapping.personnel_number})")
+            logger.info(f"Chip {chip_id} → {mapping.last_name} ({mapping.personnel_number})")
             return mapping.personnel_number
 
         except ChipMapping.DoesNotExist:
-            logger.warning(f"❌ Keine Zuordnung für Chip-ID '{chip_id}' gefunden")
+            logger.warning(f"Keine Zuordnung für Chip-ID '{chip_id}' gefunden")
             return None
 
     def create_working_time(self, personnel_number: str, action: str) -> bool:
@@ -71,13 +71,11 @@ class HRworksAPIClient:
         Args:
             personnel_number: Personalnummer des Mitarbeiters
             action: 'clockIn' oder 'clockOut'
-        
-        Returns:
-            True bei Erfolg, False bei Fehler
+            Diese laufen über Parameter, nicht über den Payload
         """
         token = self._get_token()
         if not token:
-            logger.error("❌ Konnte keinen gültigen Token erhalten")
+            logger.error("Konnte keinen gültigen Token erhalten")
             return False
 
         try:
@@ -94,56 +92,53 @@ class HRworksAPIClient:
                 "type": "workingTime"
             }
             
-            logger.info(f"🔵 API Request: POST {url}?action={action}")
+            #logger.info(f"🔵 API Request: POST {url}?action={action}")
             
             response = requests.post(
                 url,
                 headers=headers,
-                params=params,  # ✅ Nur Query-Parameter!
+                params=params, 
                 timeout=30
             )
             
-            logger.info(f"📥 Status: {response.status_code}")
-            logger.info(f"📥 Response: {response.text}")
+            logger.info(f"Status: {response.status_code}")
+            logger.info(f"Response: {response.text}")
 
             if response.status_code in [200, 201, 204]:
-                logger.info(f"✅ Zeitbuchung erfolgreich für PN {personnel_number}: {action}")
+                logger.info(f"Zeitbuchung erfolgreich für PN {personnel_number}: {action}")
                 return True
             else:
-                logger.error(f"❌ Zeitbuchung fehlgeschlagen: {response.status_code} - {response.text}")
+                logger.error(f"Zeitbuchung fehlgeschlagen: {response.status_code} - {response.text}")
                 return False
 
         except Exception as e:
-            logger.error(f"❌ Fehler bei Zeitbuchung: {str(e)}")
+            logger.error(f"Fehler bei Zeitbuchung: {str(e)}")
             return False
 
     def book_time(self, chip_id: str, booking_type: str) -> bool:
         """
-        Vereinfachte Methode: Von Chip-ID zur Zeitbuchung
+        Zeitbuchung
         
         Args:
             chip_id: RFID-Chip-ID
             booking_type: "Kommen", "Gehen", "Dienstgang"
-            
-        Returns:
-            True bei Erfolg, False bei Fehler
         """
         # Chip-ID → Personalnummer
         personnel_number = self.get_personnel_number_by_chip(chip_id)
         if not personnel_number:
-            logger.error(f"❌ Keine Personalnummer für Chip {chip_id} gefunden")
+            logger.error(f"Keine Personalnummer für Chip {chip_id} gefunden")
             return False
 
         # Booking-Type → HRworks-Action
         action_mapping = {
             "Kommen": "clockIn",
             "Gehen": "clockOut",  
-            "Dienstgang": "clockIn"  # ✅ Dienstgang ist auch ein clockIn
+            "Dienstgang": "clockIn"
         }
 
         action = action_mapping.get(booking_type)
         if not action:
-            logger.error(f"❌ Unbekannter Buchungstyp: {booking_type}")
+            logger.error(f"Unbekannter Buchungstyp: {booking_type}")
             return False
 
         # Zeitbuchung erstellen
