@@ -32,6 +32,7 @@ db.sqlite3
 db.sqlite3-journal
 /static/
 /media/
+/time_tracking/static/images/logo.png
 
 # Environment Variables
 .env
