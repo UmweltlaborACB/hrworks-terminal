@@ -5,8 +5,8 @@
 {% block body_class %}booking-screen{% endblock %}
 
 {% block content %}
-<div class="booking-container">
-    {% if first_name %}
+<div class="greeting-container">
+        {% if first_name %}
         <h1>Hallo {{ first_name }}</h1>
     {% elif full_name %}
         <h1>Hallo {{ full_name }}</h1>
@@ -15,6 +15,8 @@
         <p class="text-warning">Transponder {{ chip_id }} ist noch nicht zugeordnet.</p>
     {% endif %}
     <h2>Bitte Buchungsart wählen</h2>
+<div class="booking-container">
+
     
     <form method="post" action="{% url 'booking' %}" class="booking-form">  
         {% csrf_token %}
