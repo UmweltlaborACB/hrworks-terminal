@@ -5,8 +5,8 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-family: LinotypeSyntax-Regular, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif,;
+    background-color: #6ba4ed;
     display: flex;
     justify-content: center;
     align-items: top;
@@ -79,19 +79,19 @@ h1 {
 }
 
 .booking-start {
-    background-color: #4CAF50; /* Green */
+    background-color: #4CAF50;
     color: white;
 }
 .booking-end {
-    background-color: #f44336; /* Red */
+    background-color: #f44336;
     color: white;
 }
-.booking-business-trip {
-    background-color: #2196F3; /* Blue */
+.booking-business_trip {
+    background-color: #90be22;
     color: white;
 }   
 .booking-cancel {
-    background-color: #808080; /* Gray */
+    background-color: #808080;
     color: white;
 } 
 
