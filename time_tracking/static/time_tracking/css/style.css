@@ -15,6 +15,7 @@ body {
 }
 
 .logo {
+    align-self: center;
     max-width: auto;
     height: auto;
     margin-bottom: 200px;
