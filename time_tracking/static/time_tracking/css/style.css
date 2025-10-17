@@ -15,9 +15,9 @@ body {
 }
 
 .logo {
-    max-width: 300px;
+    max-width: auto;
     height: auto;
-    margin-bottom: 20px;
+    margin-bottom: 200px;
 }
 .container {
     text-align: center;
