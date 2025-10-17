@@ -19,7 +19,7 @@ body {
     size-adjust: 70%;
     max-width: auto;
     height: auto;
-    margin-bottom: 200px;
+    margin-bottom: 150px;
 }
 .container {
     text-align: center;
@@ -37,6 +37,7 @@ h1 {
     font-size: 1.5rem;
     margin-bottom: 40px;
     opacity: 0.9;
+    margin-top: 50px;
 }
 
 /* Scan-Screen */
