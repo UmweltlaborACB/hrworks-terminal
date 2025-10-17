@@ -17,6 +17,7 @@ HRWORKS_SECRET_KEY = os.getenv('HRWORKS_SECRET_KEY')
 HRWORKS_CHIP_ID_FIELD = os.getenv('HRWORKS_CHIP_ID_FIELD', 'TransponderID')
 HRWORKS_API_URL = os.getenv('HRWORKS_API_URL', 'https://api.hrworks.de/v2')
 COMPANY_NAME = os.getenv('COMPANY_NAME', 'My Company')
+READER_TYPE = os.getenv('READER_TYPE', 'USB')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
