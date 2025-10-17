@@ -2,7 +2,8 @@
 
 {% block content %}
 <div class="container">
-    <h1>{{ company_name }}</h1>
+    <!-- <h1>{{ company_name }}</h1> -->
+    <img src="{% static 'time_tracking/images/logo.png' %}" alt={{ company_name }} class="logo">
     <p><h2>Zeiterfassung</h2></p>
     <p class="instruction">Bitte Chip auflegen</p>
     <div class="loading-spinner"></div>    
@@ -21,7 +22,7 @@ document.addEventListener('keypress', function(e) {
     lastKeyTime = currentTime;
     
     if (e.key === 'Enter' && chipIdBuffer.length > 0) {
-        // ✅ WICHTIG: trim() entfernt \n, \r und Leerzeichen
+        //trim() entfernt \n, \r und Leerzeichen
         const chipId = chipIdBuffer.trim();
         console.log('RFID erkannt:', chipId);
         

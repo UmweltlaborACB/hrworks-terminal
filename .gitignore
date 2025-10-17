@@ -32,7 +32,7 @@ db.sqlite3
 db.sqlite3-journal
 /static/
 /media/
-/time_tracking/static/images/logo.png
+time_tracking/static/time_tracking/images/logo.png
 
 # Environment Variables
 .env
@@ -50,3 +50,4 @@ Thumbs.db
 
 # Raspberry Pi specific
 *.pyc
+
