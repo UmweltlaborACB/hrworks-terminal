@@ -1,6 +1,7 @@
 Django==4.2.7
 python-dotenv==1.0.0
 requests==2.31.0
+#Für Raspberry Pi und MFRC522
 mfrc522==0.0.7
 RPi.GPIO==0.7.1
 spidev==3.6
