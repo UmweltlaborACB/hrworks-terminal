@@ -15,7 +15,7 @@
         <p class="text-warning">Transponder {{ chip_id }} ist noch nicht zugeordnet.</p>
     {% endif %}
     <h3>Bitte Buchungsart wählen</h3>
-    
+
 <div class="booking-container">
 
     
@@ -48,9 +48,9 @@
     </form>
 </div>
 <script>
-    // Auto-Redirect nach 30 Sekunden ohne Aktion
+    // Auto-Redirect nach 45 Sekunden ohne Aktion
     setTimeout(function() {
         window.location.href = "{% url 'scan' %}";
-    }, 30000);
+    }, 45000);
 </script>
 {% endblock %}
