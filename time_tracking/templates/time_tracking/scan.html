@@ -2,9 +2,11 @@
 {% extends 'time_tracking/base.html' %}
 {% load static %}
 {% block content %}
+
+<img src="{% static 'time_tracking/images/logo.png' %}" alt={{ company_name }} class="logo">
 <div class="container">
     <!-- <h1>{{ company_name }}</h1> -->
-    <img src="{% static 'time_tracking/images/logo.png' %}" alt={{ company_name }} class="logo">
+
     <p><h2>Zeiterfassung</h2></p>
     <p class="instruction">Bitte Chip auflegen</p>
     <div class="loading-spinner"></div>    
