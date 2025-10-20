@@ -10,4 +10,4 @@ Im Moment wird der Chip per JavaScript direkt von der Website gelesen, der Leser
 Der Leser sollte als HID Gerät funktionieren, damit die ID ausgelesen werden kann.(Ändert sich eventuell noch, je nach Hardwareaufbau) 
 
 
-Um nicht unnötig API Calls machen zu müssen läuft die Zuordnung Transponder -> Mitarbeiter(Über einen Hinweis ob ich /persons direkt nach einem CustomField durchsuchen kann würde ich mich freuen) 
+Um nicht unnötig API Calls machen zu müssen läuft die Zuordnung Transponder -> Mitarbeiter(Anscheinend kann man /persons nicht direkt nach einem Custom Field durchsuchen) 
