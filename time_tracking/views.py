@@ -41,7 +41,7 @@ class BookingView(View):
             full_name = None
             logger.warning(f"Kein Mapping für Chip-ID {chip_id} gefunden")
         
-        logger.info(f"Chip erkannt: {chip_id} für Begrüßung")
+        logger.info(f"Chip erkannt: {chip_id}")
         
         context = {
             'chip_id': chip_id,
@@ -50,55 +50,36 @@ class BookingView(View):
         }
         return render(request, 'time_tracking/booking.html', context)
     
-def post(self, request):
-    """Verarbeitet die Buchung"""
-    chip_id = request.session.get('chip_id')
-    booking_type = request.POST.get('booking_type')
-    
-    logger.info(f"📋 POST-Request erhalten")
-    logger.info(f"🔑 Chip-ID aus Session: {chip_id}")
-    logger.info(f"📝 Booking-Type: {booking_type}")
-
-    if not chip_id:
-        messages.error(request, 'Chip-ID verloren gegangen!')
+    def post(self, request):
+        """Verarbeitet die Buchung"""
+        chip_id = request.session.get('chip_id')
+        booking_type = request.POST.get('booking_type')
+        
+        if not chip_id:
+            messages.error(request, 'Chip-ID verloren gegangen!')
+            return redirect('scan')
+        
+        if not booking_type:
+            messages.error(request, 'Bitte Buchungsart wählen!')
+            return redirect('booking')
+        
+        try:
+            # HRworks API aufrufen
+            hrworks_client = HRworksAPIClient()  
+            result = hrworks_client.book_time(chip_id, booking_type)
+            
+            if result:
+                messages.success(request, f'✅ {booking_type} erfolgreich gebucht!')
+            else:
+                messages.error(request, '❌ Buchung fehlgeschlagen!')
+            
+        except Exception as e:
+            logger.error(f"Fehler bei Buchung: {str(e)}")
+            messages.error(request, f'❌ Fehler: {str(e)}')
+        
+        # Session aufräumen
+        if 'chip_id' in request.session:
+            del request.session['chip_id']
+        
+        # Zurück zur Scan-Seite
         return redirect('scan')
-
-    if not booking_type:
-        messages.error(request, 'Bitte Buchungsart wählen!')
-        return redirect('booking')
-
-    try:
-        # Chip-Mapping holen
-        chip_mapping = ChipMapping.objects.get(transponder_id=chip_id)
-        logger.info(f"👤 Mapping gefunden: {chip_mapping.personnel_number} - {chip_mapping.first_name} {chip_mapping.last_name}")
-        
-        # HRworks API aufrufen
-        hrworks_client = HRworksAPIClient()
-        logger.info(f"🌐 HRworks-Client erstellt")
-        logger.info(f"📤 Rufe book_time auf mit: chip_id={chip_id}, booking_type={booking_type}")
-        
-        result = hrworks_client.book_time(chip_id, booking_type)
-        
-        logger.info(f"📥 HRworks Antwort: {result}")
-        
-        if result:
-            logger.info(f"✅ Buchung erfolgreich")
-            messages.success(request, f'✅ {booking_type} erfolgreich gebucht!')
-        else:
-            logger.warning(f"❌ Buchung fehlgeschlagen - Result war False/None")
-            messages.error(request, '❌ Buchung fehlgeschlagen!')
-
-    except ChipMapping.DoesNotExist:
-        logger.error(f"❌ Kein Mapping für Chip-ID {chip_id}")
-        messages.error(request, f'Chip {chip_id} ist nicht zugeordnet!')
-    except Exception as e:
-        logger.error(f"💥 Exception: {type(e).__name__}: {str(e)}")
-        import traceback
-        logger.error(traceback.format_exc())
-        messages.error(request, f'❌ Fehler: {str(e)}')
-
-    # Session aufräumen
-    if 'chip_id' in request.session:
-        del request.session['chip_id']
-
-    return redirect('scan')
