@@ -71,6 +71,7 @@ class HRworksAPIClient:
         Args:
             personnel_number: Personalnummer des Mitarbeiters
             action: 'clockIn' oder 'clockOut'
+            time_type: 'workingTime' oder 'businessErrand'
             Diese laufen über Parameter, nicht über den Payload
         """
         token = self._get_token()
