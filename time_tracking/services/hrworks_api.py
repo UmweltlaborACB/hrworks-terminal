@@ -139,7 +139,7 @@ class HRworksAPIClient:
         action = action_mapping.get(booking_type)
         time_type = "workingTime"
         if booking_type == "Dienstgang":
-            time_type = "businessTrip"
+            time_type = "businessErrand"
         if not action:
             logger.error(f"Unbekannter Buchungstyp: {booking_type}")
             return False
