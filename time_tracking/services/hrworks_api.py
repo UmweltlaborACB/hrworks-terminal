@@ -89,11 +89,14 @@ class HRworksAPIClient:
             
             if action == "clockIn":
                 params = {
+                    "comment": "Über Terminal",
                     "type": time_type,
                     "action": action
                                 }
             else:
+                    
                     params = {
+                    "comment": "Über Terminal",
                     "action": action
                                 }
             
