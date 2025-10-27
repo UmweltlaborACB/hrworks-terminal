@@ -1,4 +1,5 @@
-@import url(https://db.onlinewebfonts.com/c/1eb1df7e21f9915edbe8b235b95b7986?family=LinotypeSyntax-Regular);
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
+
 * {
     margin: 0;
     padding: 0;
@@ -6,15 +7,16 @@
 }
 
 body {
-    font-family: "LinotypeSyntax-Regular";
-    background-color: #6ba4ed;
+font-family: 'Open Sans', Calibri, sans-serif;
+    background-color: #46a5dc;
     display: flex;
-    justify-content: center;
-    align-items: top;
+    /*justify-content: center; */
+    align-items: stretch;
+    flex-direction: column;
+    align-items: center;
     min-height: 100vh;
     color: white;
 }
-
 .logo {
     align-self: center;
     size-adjust: 70%;
@@ -25,23 +27,27 @@ body {
 .container {
     text-align: center;
     padding: 40px;
+    width: 100%;
+    max-width: none;
     /*max-width: 500px;*/
     width: 90%;
 }
-
 h1 {
     font-size: 3rem;
     margin-bottom: 20px;
 }
-
 .greeting-container {
-    text-align: center;;
+    text-align: center;
     font-size: 2rem;
     margin-bottom: 50px;
+    margin-top: 50px;
+    width: 100%;
 }
 .booking-container{
     margin-top: 50px;
     width: 100%;
+    padding: 0 40px;
+    box-sizing: border-box;
 }
 
 .instruction {
@@ -65,16 +71,13 @@ h1 {
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
-
 /* Booking-Screen */
 .button-grid {
     display: grid;
     grid-template-columns: 1fr;
     /*grid-template-columns: 8ch auto;*/
     gap: 40px;
-    
 }
-
 .btn {
     width: 100%;
     height: auto;
@@ -82,17 +85,21 @@ h1 {
     /*display: flex;*/
     font-size: 2rem;
     font-weight: bold;
-    color: #667eea;
-    border-color: #764ba2;
     background: white;
     transition: all 0.3s;
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     border-radius: 10px;
+    margin-bottom: 5px;
 }
 
 .btn:hover {
     transform: translateY(-5px);
     box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+.booking-form,
+.booking-buttons {
+  width: 100%;
 }
 
 .btn:active {
@@ -108,13 +115,49 @@ h1 {
     color: white;
 }
 .booking-business_trip {
-    background-color: #90be22;
+    background-color: #cdbe18;
     color: white;
 }   
 .booking-cancel {
     background-color: #808080;
     color: white;
+    margin-top: 1px;
 } 
+
+/* Booking Notifications */
+.messages-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    min-width: 300px;
+}
+
+.alert {
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.alert-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.alert-error {
+    background-color: #dc3545;
+    color: white;
+}
+
+.alert-warning {
+    background-color: #ffc107;
+    color: black;
+}
+
 
 /* Responsive */
 @media (max-width: 600px) {
