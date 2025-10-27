@@ -88,11 +88,11 @@ class HRworksAPIClient:
             }
             
             params = {
-                "action": action,
-                "type": time_type
-            }
+                "type": time_type,
+                "action": action
+                            }
             
-            #logger.info(f"🔵 API Request: POST {url}?action={action}")
+            logger.info(f"🔵 API Request: {params}")
             
             response = requests.post(
                 url,
