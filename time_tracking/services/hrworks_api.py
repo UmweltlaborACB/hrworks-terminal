@@ -87,10 +87,15 @@ class HRworksAPIClient:
                 "Content-Type": "application/json"
             }
             
-            params = {
-                "type": time_type,
-                "action": action
-                            }
+            if time_type == "businessErrand":
+                params = {
+                    "type": time_type,
+                    "action": action
+                                }
+            else:
+                    params = {
+                    "action": action
+                                }
             
             logger.info(f"🔵 API Request: {params}")
             
