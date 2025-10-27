@@ -124,6 +124,41 @@ h1 {
     margin-top: 1px;
 } 
 
+/* Booking Notifications */
+.messages-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    min-width: 300px;
+}
+
+.alert {
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.alert-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.alert-error {
+    background-color: #dc3545;
+    color: white;
+}
+
+.alert-warning {
+    background-color: #ffc107;
+    color: black;
+}
+
+
 /* Responsive */
 @media (max-width: 600px) {
     .button-grid {
