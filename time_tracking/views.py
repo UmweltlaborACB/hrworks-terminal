@@ -41,7 +41,7 @@ class BookingView(View):
             full_name = None
             logger.warning(f"Kein Mapping für Chip-ID {chip_id} gefunden")
         
-        logger.info(f"Chip erkannt: {chip_id}")
+        logger.info(f"Chip erkannt: {chip_id} für Begrüßung")
         
         context = {
             'chip_id': chip_id,
@@ -66,7 +66,9 @@ class BookingView(View):
         
         try:
             # HRworks API aufrufen
-            hrworks_client = HRworksAPIClient()  
+            
+            hrworks_client = HRworksAPIClient()
+            logger.info(f"Weitergabe der Buchung an HRWorks")  
             result = hrworks_client.book_time(chip_id, booking_type)
             logger.info(f"Result {result}")
             if result:

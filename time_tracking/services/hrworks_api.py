@@ -18,6 +18,7 @@ class HRworksAPIClient:
 
     def _authenticate(self) -> bool:
         """Holt JWT-Token von HRworks"""
+        logger.info(f"Token holen")
         try:
             response = requests.post(
                 f"{self.BASE_URL}/authentication",
