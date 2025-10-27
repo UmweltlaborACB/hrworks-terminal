@@ -52,6 +52,7 @@ class BookingView(View):
     
     def post(self, request):
         """Verarbeitet die Buchung"""
+        logger.info(f"Verarbeitung der Buchung")
         chip_id = request.session.get('chip_id')
         booking_type = request.POST.get('booking_type')
         
