@@ -64,7 +64,7 @@ class HRworksAPIClient:
             logger.warning(f"Keine Zuordnung für Chip-ID '{chip_id}' gefunden")
             return None
 
-    def create_working_time(self, personnel_number: str, action: str) -> bool:
+    def create_working_time(self, personnel_number: str, action: str, time_type: str) -> bool:
         """
         Erstellt eine Zeitbuchung in HRworks
         
@@ -89,7 +89,7 @@ class HRworksAPIClient:
             
             params = {
                 "action": action,
-                "type": "workingTime"
+                "type": time_type
             }
             
             #logger.info(f"🔵 API Request: POST {url}?action={action}")
@@ -137,9 +137,12 @@ class HRworksAPIClient:
         }
 
         action = action_mapping.get(booking_type)
+        time_type = "workingTime"
+        if booking_type == "Dienstgang":
+            time_type = "businessTrip"
         if not action:
             logger.error(f"Unbekannter Buchungstyp: {booking_type}")
             return False
 
         # Zeitbuchung erstellen
-        return self.create_working_time(personnel_number, action)
+        return self.create_working_time(personnel_number, action, time_type)
