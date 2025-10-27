@@ -87,7 +87,7 @@ class HRworksAPIClient:
                 "Content-Type": "application/json"
             }
             
-            if time_type == "businessErrand":
+            if action == "clockIn":
                 params = {
                     "type": time_type,
                     "action": action
