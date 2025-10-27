@@ -70,8 +70,10 @@ class BookingView(View):
             result = hrworks_client.book_time(chip_id, booking_type)
             
             if result:
+                logger.info(f"Result True")
                 messages.success(request, f'✅ {booking_type} erfolgreich gebucht!')
             else:
+                logger.info(f"Result False")
                 messages.error(request, '❌ Buchung fehlgeschlagen!')
             
         except Exception as e:
