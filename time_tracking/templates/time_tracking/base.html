@@ -12,5 +12,23 @@
     {% block content %}{% endblock %}
     
     {% block extra_js %}{% endblock %}
+    <!-- In templates/time_tracking/base.html -->
+{% if messages %}
+<div class="messages-container">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+    // Messages nach 3 Sekunden ausblenden
+    setTimeout(function() {
+        document.querySelector('.messages-container').style.display = 'none';
+    }, 3000);
+</script>
+{% endif %}
+
 </body>
 </html>
