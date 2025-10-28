@@ -2,13 +2,29 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib import messages
 from django.conf import settings
+from django.http import JsonResponse
+from django.core.cache import cache
 from .services.hrworks_api import HRworksAPIClient
 from .models import ChipMapping
 import logging
 
+
 logger = logging.getLogger(__name__)
 
+
+class CheckChipView(View):
+    """API-Endpoint: Prüft ob ein Chip gescannt wurde"""
     
+    def get(self, request):
+        chip_id = cache.get('last_scanned_chip')
+        
+        if chip_id:
+            # Chip aus Cache entfernen (einmalig verwenden)
+            cache.delete('last_scanned_chip')
+            return JsonResponse({'chip_id': chip_id})
+        
+        return JsonResponse({'chip_id': None})
+
 class ScanView(View):
     """Startseite - Chip scannen"""
 

@@ -1,42 +1,28 @@
-
 {% extends 'time_tracking/base.html' %}
 {% load static %}
 {% block content %}
 
-
 <div class="container">
-    <!-- <h1>{{ company_name }}</h1> -->
-    <img src="{% static 'time_tracking/images/logo.png' %}" alt={{ company_name }} class="logo">
+    <img src="{% static 'time_tracking/images/logo.png' %}" alt="{{ company_name }}" class="logo">
     <p><h1>Zeiterfassung</h1></p>
     <p class="instruction">Bitte Chip auflegen</p>
     <div class="loading-spinner"></div>    
 </div>
 
 <script>
-let chipIdBuffer = '';
-let lastKeyTime = 0;
-
-document.addEventListener('keypress', function(e) {
-    const currentTime = Date.now();
-    
-    if (currentTime - lastKeyTime > 100) {
-        chipIdBuffer = '';
-    }
-    lastKeyTime = currentTime;
-    
-    if (e.key === 'Enter' && chipIdBuffer.length > 0) {
-        //trim() entfernt \n, \r und Leerzeichen
-        const chipId = chipIdBuffer.trim();
-        console.log('RFID erkannt:', chipId);
+// Polling alle 500ms
+setInterval(async function() {
+    try {
+        const response = await fetch('/check-chip/');
+        const data = await response.json();
         
-        window.location.href = `/booking/?chip_id=${encodeURIComponent(chipId)}`;
-        chipIdBuffer = '';
-    } else if (e.key !== 'Enter') {
-        chipIdBuffer += e.key;
+        if (data.chip_id) {
+            console.log('RFID erkannt:', data.chip_id);
+            window.location.href = `/booking/?chip_id=${encodeURIComponent(data.chip_id)}`;
+        }
+    } catch (error) {
+        console.error('Fehler beim Chip-Check:', error);
     }
-});
-
-// Fokus sicherstellen (damit Tastatureingaben ankommen)
-window.focus();
+}, 500);
 </script>
 {% endblock %}
