@@ -3,7 +3,7 @@ import serial
 import os
 import sys
 import django
-from .models import ChipScan
+from time_tracking.models import ChipScan
 
 
 
