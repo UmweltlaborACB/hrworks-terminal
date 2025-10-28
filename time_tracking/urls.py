@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import ScanView, BookingView, CheckChipView
+from .views import ScanView, BookingView, check_new_chip
 from time_tracking import views
 
 urlpatterns = [
