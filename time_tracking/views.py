@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.utils import timezone
 from datetime import timedelta
 from .services.hrworks_api import HRworksAPIClient
-from .models import ChipMapping
+from .models import ChipMapping, ChipScan
 import logging
 
 
