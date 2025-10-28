@@ -1,6 +1,9 @@
 import requests
 import logging
 from django.conf import settings
+import serial
+import threading
+from typing import Optional, Callable
 
 logger = logging.getLogger(__name__)
 
