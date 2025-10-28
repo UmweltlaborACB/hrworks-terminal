@@ -14,16 +14,23 @@ logger = logging.getLogger(__name__)
 
 class CheckChipView(View):
     """API-Endpoint: Prüft ob ein Chip gescannt wurde"""
-    
+
     def get(self, request):
-        chip_id = cache.get('last_scanned_chip')
+        # Prüfen ob Chip gescannt wurde
+        if cache.get('chip_scanned'):
+            chip_id = cache.get('last_chip_id')
+            
+            # Flags zurücksetzen
+            cache.delete('chip_scanned')
+            
+            return JsonResponse({
+                'scanned': True,
+                'chip_id': chip_id
+            })
         
-        if chip_id:
-            # Chip aus Cache entfernen (einmalig verwenden)
-            cache.delete('last_scanned_chip')
-            return JsonResponse({'chip_id': chip_id})
-        
-        return JsonResponse({'chip_id': None})
+        return JsonResponse({
+            'scanned': False
+        })
 
 class ScanView(View):
     """Startseite - Chip scannen"""

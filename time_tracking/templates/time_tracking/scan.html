@@ -1,28 +1,74 @@
-{% extends 'time_tracking/base.html' %}
 {% load static %}
-{% block content %}
-
-<div class="container">
-    <img src="{% static 'time_tracking/images/logo.png' %}" alt="{{ company_name }}" class="logo">
-    <p><h1>Zeiterfassung</h1></p>
-    <p class="instruction">Bitte Chip auflegen</p>
-    <div class="loading-spinner"></div>    
-</div>
-
-<script>
-// Polling alle 500ms
-setInterval(async function() {
-    try {
-        const response = await fetch('/check-chip/');
-        const data = await response.json();
-        
-        if (data.chip_id) {
-            console.log('RFID erkannt:', data.chip_id);
-            window.location.href = `/booking/?chip_id=${encodeURIComponent(data.chip_id)}`;
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ company_name }} - Zeiterfassung</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
-    } catch (error) {
-        console.error('Fehler beim Chip-Check:', error);
-    }
-}, 500);
-</script>
-{% endblock %}
+        .container {
+            text-align: center;
+            background: white;
+            padding: 60px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .icon {
+            font-size: 100px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        h1 {
+            color: #333;
+            margin: 0;
+        }
+        .company {
+            color: #667eea;
+            font-size: 24px;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+        .status {
+            margin-top: 20px;
+            color: #666;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="company">{{ company_name }}</div>
+        <div class="icon">🎫</div>
+        <h1>Chip auflegen</h1>
+        <div class="status">System bereit...</div>
+    </div>
+
+    <script>
+        // Alle 500ms prüfen ob Chip gescannt wurde
+        setInterval(function() {
+            fetch('{% url "time_tracking:check_chip" %}')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.scanned) {
+                        console.log('✅ Chip erkannt:', data.chip_id);
+                        window.location.href = '{% url "time_tracking:booking" %}?chip_id=' + data.chip_id;
+                    }
+                })
+                .catch(error => console.error('❌ Fehler:', error));
+        }, 500);
+    </script>
+</body>
+</html>
