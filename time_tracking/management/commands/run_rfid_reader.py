@@ -5,7 +5,12 @@ import django
 from time_tracking.models import ChipScan
 
 
+class Command():
+    help = 'Startet den RFID Reader Service'
 
+    def handle(self, *args, **options):
+        self.stdout.write('🚀 Starte RFID Reader...')
+        start_rfid_reader()
 
 def  start_rfid_reader():
     print("🚀 RFID Reader gestartet...")
