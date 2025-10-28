@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import serial
 import os
 import sys
@@ -8,7 +7,7 @@ from time_tracking.models import ChipScan
 
 
 
-def main():
+def  start_rfid_reader():
     print("🚀 RFID Reader gestartet...")
     
     try:
@@ -29,5 +28,5 @@ def main():
         print(f"❌ Fehler: {e}")
         sys.exit(1)
 
-if __name__ == "__main__":
-    main()
+if __name__ == "__start_rfid_reader__":
+    start_rfid_reader()
