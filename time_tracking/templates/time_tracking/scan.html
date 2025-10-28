@@ -57,18 +57,16 @@
     </div>
 
     <script>
-        // Alle 500ms prüfen ob Chip gescannt wurde
         setInterval(function() {
-            fetch('{% url "time_tracking:check_chip" %}')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.scanned) {
-                        console.log('✅ Chip erkannt:', data.chip_id);
-                        window.location.href = '{% url "time_tracking:booking" %}?chip_id=' + data.chip_id;
-                    }
-                })
-                .catch(error => console.error('❌ Fehler:', error));
-        }, 500);
+    fetch('/api/check-chip/')
+        .then(response => response.json())
+        .then(data => {
+            if (data.chip_scanned) {
+                window.location.href = '/booking/?chip=' + data.chip_id;
+            }
+        });
+}, 500);  // Alle 500ms prüfen
+
     </script>
 </body>
 </html>

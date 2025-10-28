@@ -29,3 +29,14 @@ class ChipMapping(models.Model):
     
     def __str__(self):
         return f"{self.last_name} ({self.personnel_number})"
+
+class ChipScan(models.Model):
+    chip_id = models.CharField(max_length=50)
+    scanned_at = models.DateTimeField(auto_now_add=True)
+    processed = models.BooleanField(default=False)
+    
+    class Meta:
+        ordering = ['-scanned_at']
+        indexes = [
+            models.Index(fields=['-scanned_at', 'processed']),
+        ]

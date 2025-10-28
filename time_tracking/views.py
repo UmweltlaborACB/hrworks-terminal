@@ -3,7 +3,8 @@ from django.views import View
 from django.contrib import messages
 from django.conf import settings
 from django.http import JsonResponse
-from django.core.cache import cache
+from django.utils import timezone
+from datetime import timedelta
 from .services.hrworks_api import HRworksAPIClient
 from .models import ChipMapping
 import logging
@@ -12,25 +13,29 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class CheckChipView(View):
-    """API-Endpoint: Prüft ob ein Chip gescannt wurde"""
-
-    def get(self, request):
-        # Prüfen ob Chip gescannt wurde
-        if cache.get('chip_scanned'):
-            chip_id = cache.get('last_chip_id')
-            
-            # Flags zurücksetzen
-            cache.delete('chip_scanned')
-            
-            return JsonResponse({
-                'scanned': True,
-                'chip_id': chip_id
-            })
+def check_new_chip(request):
+    """Prüft ob in letzten 2 Sekunden ein Chip gescannt wurde"""
+    
+    # Zeitfenster: letzte 2 Sekunden
+    time_threshold = timezone.now() - timedelta(seconds=2)
+    
+    # Unverarbeiteten Scan suchen
+    recent_scan = ChipScan.objects.filter(
+        scanned_at__gte=time_threshold,
+        processed=False
+    ).first()
+    
+    if recent_scan:
+        # Als verarbeitet markieren
+        recent_scan.processed = True
+        recent_scan.save()
         
         return JsonResponse({
-            'scanned': False
+            'chip_scanned': True,
+            'chip_id': recent_scan.chip_id
         })
+    
+    return JsonResponse({'chip_scanned': False})
 
 class ScanView(View):
     """Startseite - Chip scannen"""
