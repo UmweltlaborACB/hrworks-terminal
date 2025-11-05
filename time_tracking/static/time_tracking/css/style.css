@@ -67,6 +67,11 @@ h1 {
     border-radius: 50%;
     animation: spin 1s linear infinite;
 }
+.time {
+    font-size: 2rem;
+    opacity: 0.9;
+
+}
 
 @keyframes spin {
     to { transform: rotate(360deg); }
