@@ -68,9 +68,10 @@ h1 {
     animation: spin 1s linear infinite;
 }
 .time {
-    font-size: 3rem;
+    font-size: 1.5rem;
+    margin-bottom: 40px;
     opacity: 0.9;
-
+    margin-top: 50px;
 }
 
 @keyframes spin {

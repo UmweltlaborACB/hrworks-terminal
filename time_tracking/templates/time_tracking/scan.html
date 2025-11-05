@@ -8,7 +8,7 @@
     <!-- <h1>{{ company_name }}</h1> -->
     <img src="{% static 'time_tracking/images/logo.png' %}" alt={{ company_name }} class="logo">
     <p><h1>Zeiterfassung</h1></p>
-    <p class="time">Zeit: {{ current_time|date:"H:i" }}</p>
+    <p class="time">{{ current_time|date:"H:i" }}</p>
     <p class="instruction">Bitte Chip auflegen</p>
     <div class="loading-spinner"></div>    
 </div>
