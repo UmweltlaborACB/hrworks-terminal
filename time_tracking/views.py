@@ -40,7 +40,7 @@ class BookingView(View):
         except ChipMapping.DoesNotExist:
             name = None
             logger.warning(f"Kein Mapping für Chip-ID {chip_id} gefunden")
-            messages.error(request, 'Kein Mapping für Chip-ID {chip_id} gefunden')
+            messages.error(request, 'Transponder ID nicht gefunden')
             return redirect('scan')
         
         logger.info(f"Chip erkannt: {chip_id}")
