@@ -8,7 +8,7 @@
     <!-- <h1>{{ company_name }}</h1> -->
     <img src="{% static 'time_tracking/images/logo.png' %}" alt={{ company_name }} class="logo">
     <p><h1>Zeiterfassung</h1></p>
-    <p class="time"><h1>{{ current_time|date:"H:i" }}</h1></p>
+    <p class="time"><span id="current-time-display">{{ current_time|date:"H:i:s" }}</span></h1></p>
     <p class="instruction">Bitte Chip auflegen</p>
     <div class="loading-spinner"></div>    
 </div>
@@ -36,6 +36,28 @@ document.addEventListener('keypress', function(e) {
         chipIdBuffer += e.key;
     }
 });
+
+function getFormattedTime() {
+            const now = new Date();  // Lokale Uhrzeit des Clients
+            const hours = String(now.getHours()).padStart(2, '0');  // Stunden (00-23)
+            const minutes = String(now.getMinutes()).padStart(2, '0');  // Minuten (00-59)
+            const seconds = String(now.getSeconds()).padStart(2, '0');  // Sekunden (00-59)
+            return `${hours}:${minutes}:${seconds}`;  // Format: HH:MM:SS
+        }
+
+        // Funktion, um die Uhrzeit im DOM zu aktualisieren
+        function updateTimeDisplay() {
+            const timeElement = document.getElementById('current-time-display');
+            if (timeElement) {
+                timeElement.textContent = getFormattedTime();
+            }
+        }
+
+        // Starte die Aktualisierung alle 1000 ms (1 Sekunde)
+        setInterval(updateTimeDisplay, 1000);
+
+        // Initiale Aktualisierung beim Laden der Seite (optional, falls Django-Wert überschrieben werden soll)
+        updateTimeDisplay();
 
 // Fokus sicherstellen (damit Tastatureingaben ankommen)
 window.focus();
