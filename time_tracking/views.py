@@ -71,24 +71,24 @@ class BookingView(View):
         if not booking_type:
             messages.error(request, 'Bitte Buchungsart wählen!')
             return redirect('booking')
-        
-        try:
-            # HRworks API aufrufen
-            hrworks_client = HRworksAPIClient()  
-            result = hrworks_client.book_time(chip_id, booking_type)
+        if booking_type not in ['Abbrechen']:
+            try:
+                # HRworks API aufrufen
+                hrworks_client = HRworksAPIClient()  
+                result = hrworks_client.book_time(chip_id, booking_type)
+                
+                if result:
+                    messages.success(request, f'✅ {booking_type} erfolgreich gebucht!')
+                else:
+                    messages.error(request, '❌ Buchung fehlgeschlagen!')
+                
+            except Exception as e:
+                logger.error(f"Fehler bei Buchung: {str(e)}")
+                messages.error(request, f'❌ Fehler: {str(e)}')
             
-            if result:
-                messages.success(request, f'✅ {booking_type} erfolgreich gebucht!')
-            else:
-                messages.error(request, '❌ Buchung fehlgeschlagen!')
-            
-        except Exception as e:
-            logger.error(f"Fehler bei Buchung: {str(e)}")
-            messages.error(request, f'❌ Fehler: {str(e)}')
-        
-        # Session aufräumen
-        if 'chip_id' in request.session:
-            del request.session['chip_id']
+            # Session aufräumen
+            if 'chip_id' in request.session:
+                del request.session['chip_id']
         
         # Zurück zur Scan-Seite
         return redirect('scan')
