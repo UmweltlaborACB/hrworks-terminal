@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib import messages
 from django.conf import settings
+from django.utils import timezone
 from .services.hrworks_api import HRworksAPIClient
 from .models import ChipMapping
 import logging
@@ -14,8 +15,10 @@ class ScanView(View):
 
     #Firmennamen aus settings holen
     def get(self, request):
+        current_time = timezone.now()
         context = {
             'company_name': settings.COMPANY_NAME,
+            'current_time': current_time,
         }
         return render(request, 'time_tracking/scan.html', context)
 
