@@ -36,17 +36,19 @@ class BookingView(View):
         # Chip-Mapping holen um den Namen zur Begrüßung anzuzeigen
         try:
             chip_mapping = ChipMapping.objects.get(transponder_id=chip_id)
-            full_name = f"{chip_mapping.first_name} {chip_mapping.last_name}" if chip_mapping.first_name else chip_mapping.last_name
+            name = f"{chip_mapping.first_name}" if chip_mapping.first_name else chip_mapping.last_name
         except ChipMapping.DoesNotExist:
-            full_name = None
+            name = None
             logger.warning(f"Kein Mapping für Chip-ID {chip_id} gefunden")
+            messages.error(request, 'Kein Mapping für Chip-ID {chip_id} gefunden')
+            return redirect('scan')
         
         logger.info(f"Chip erkannt: {chip_id}")
         
         context = {
             'chip_id': chip_id,
-            'full_name': full_name,
-            'first_name': full_name,
+            'full_name': name,
+            'first_name': name,
         }
 
        #context = {
