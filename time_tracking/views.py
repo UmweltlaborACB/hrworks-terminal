@@ -46,8 +46,15 @@ class BookingView(View):
         context = {
             'chip_id': chip_id,
             'full_name': full_name,
-            'first_name': chip_mapping.first_name if chip_mapping else None,
+            'first_name': full_name,
         }
+
+       #context = {
+       #     'chip_id': chip_id,
+       #     'full_name': full_name,
+       #     'first_name': chip_mapping.first_name if chip_mapping else None,
+       #}
+
         return render(request, 'time_tracking/booking.html', context)
     
     def post(self, request):
