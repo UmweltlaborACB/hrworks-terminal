@@ -120,6 +120,62 @@ class HRworksAPIClient:
             logger.error(f"Fehler bei Zeitbuchung: {str(e)}")
             return False
 
+
+    def get_working_time_status(self, personnel_number: str) -> bool:
+        """
+        Erstellt eine Zeitbuchung in HRworks
+        
+        Args:
+            personnel_number: Personalnummer des Mitarbeiters
+            action: 'clockIn' oder 'clockOut'
+            Diese laufen über Parameter, nicht über den Payload
+        """
+        token = self._get_token()
+        if not token:
+            logger.error("Konnte keinen gültigen Token erhalten")
+            return False
+
+        try:
+            url = f"{self.BASE_URL}/persons/{personnel_number}/working-times/status"
+            
+            headers = {
+                "Authorization": f"Bearer {token}",
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
+            
+            
+            params = {
+                   "personIdentifier": personnel_number,
+                 
+                             }
+           
+            
+            logger.info(f"🔵 API Request: {params}")
+            
+            response = requests.post(
+                url,
+                headers=headers,
+                params=params, 
+                timeout=30
+            )
+            
+            logger.info(f"Status: {response.status_code}")
+            logger.info(f"Response: {response.text}")
+
+            if response.status_code in [200, 201, 204]:
+                logger.info(f"Status erfolgreich geholt {personnel_number}")
+                return True
+            else:
+                logger.error(f"Abrufen fehlgeschlagen: {response.status_code} - {response.text}")
+                return False
+
+        except Exception as e:
+            logger.error(f"Fehler beim Abrufen: {str(e)}")
+            return False
+
+
+
     def book_time(self, chip_id: str, booking_type: str) -> bool:
         """
         Zeitbuchung
@@ -151,3 +207,5 @@ class HRworksAPIClient:
 
         # Zeitbuchung erstellen
         return self.create_working_time(personnel_number, action, time_type)
+    
+        

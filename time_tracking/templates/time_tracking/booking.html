@@ -8,6 +8,7 @@
 <div class="greeting-container">
         {% if first_name %}
         <h1>Hallo {{ first_name }}</h1>
+        <h3>Du bist gerade {{ status_success }}</h3>
     {% elif full_name %}
         <h1>Hallo {{ full_name }}</h1>
     {% else %}

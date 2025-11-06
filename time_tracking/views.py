@@ -46,6 +46,20 @@ class BookingView(View):
             messages.error(request, 'Transponder ID nicht gefunden')
             return redirect('scan')
         
+        try:
+            logger.info(f"Versuche Arbeitszeitstatus für PN {chip_mapping.personnel_number} zu holen")
+            hrworks_client = HRworksAPIClient()
+            status_success = hrworks_client.get_working_time_status(chip_mapping.personnel_number)
+            if status_success:
+                logger.info(f"Arbeitszeitstatus erfolgreich für PN {chip_mapping.personnel_number} geholt")
+            else:
+                logger.error(f"Fehler beim Holen des Arbeitszeitstatus für PN {chip_mapping.personnel_number}")
+        except ChipMapping.DoesNotExist:
+            name = None
+            logger.warning(f"Kein Mapping für Chip-ID {chip_id} gefunden")
+            messages.error(request, 'Transponder ID nicht gefunden')
+
+        
         logger.info(f"Chip erkannt: {chip_id}")
         
         context = {
