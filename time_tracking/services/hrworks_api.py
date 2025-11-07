@@ -123,12 +123,10 @@ class HRworksAPIClient:
 
     def get_working_time_status(self, personnel_number: str) -> bool:
         """
-        Erstellt eine Zeitbuchung in HRworks
+        Holt den aktuellen Arbeitszeitstatus eines Mitarbeiters
         
         Args:
             personnel_number: Personalnummer des Mitarbeiters
-            action: 'clockIn' oder 'clockOut'
-            Diese laufen über Parameter, nicht über den Payload
         """
         token = self._get_token()
         if not token:
