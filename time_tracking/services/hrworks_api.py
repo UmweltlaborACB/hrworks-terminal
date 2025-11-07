@@ -144,19 +144,13 @@ class HRworksAPIClient:
                 "Content-Type": "application/json"
             }
             
-            
-            params = {
-                   "personIdentifier": personnel_number,
-                 
-                             }
            
             
-            logger.info(f"🔵 API Request: {params}")
+            logger.info(f"🔵 API Request: {url}")
             
             response = requests.post(
                 url,
                 headers=headers,
-                params=params, 
                 timeout=30
             )
             
