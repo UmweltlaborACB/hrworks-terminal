@@ -49,9 +49,9 @@
     </form>
 </div>
 <script>
-    // Auto-Redirect nach 45 Sekunden ohne Aktion
+    // Auto-Redirect nach 10 Sekunden ohne Aktion
     setTimeout(function() {
         window.location.href = "{% url 'scan' %}";
-    }, 45000);
+    }, 10000);
 </script>
 {% endblock %}
